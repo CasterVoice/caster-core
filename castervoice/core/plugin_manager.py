@@ -35,9 +35,18 @@ class PluginManager():
 
         """
         for plugin_config in config:
+
             plugin_name = plugin_config["name"]
 
-            plugin_module = import_module(plugin_name)
+            try:
+                plugin_module = import_module(plugin_name)
+            except ModuleNotFoundError:
+                self._log.info("Missing dependency for plugin '%s';"
+                               " trying to resolve",
+                               plugin_name)
+                self._controller.dependency_manager \
+                    .resolve_plugin(plugin_config)
+                plugin_module = import_module(plugin_name)
 
             for name, value in getmembers(plugin_module, isclass):
                 if issubclass(value, Plugin) and not value == Plugin:

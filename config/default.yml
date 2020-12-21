@@ -2,7 +2,11 @@ plugins:
   # Plugins can have the following values:
   #     `name`: Python package containing the plugin
   #             (also serves as the identifier for the plugin).
-  - name: casterplugin.dictation
+  #     `pip`: Python pip requirements specifier
+  #            (see https://pip.pypa.io/en/stable/reference/pip_install/#requirement-specifiers).
+  - name: mycasterplugin.dictation
+  - name: castertmux
+    pip: "git+https://github.com/Timoses/caster-tmux.git"
 
 engine:
   # Currently only one engine is supported

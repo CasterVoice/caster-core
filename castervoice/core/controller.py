@@ -52,10 +52,11 @@ class Controller():
             self._engine.do_recognition(_on_begin, _on_recognition,
                                         _on_failure)
 
-    @property
-    def plugin_manager(self):
-        """TODO"""
-        return self._plugin_manager
+    plugin_manager = property(lambda self: self._plugin_manager,
+                              doc="TODO")
+
+    dependency_manager = property(lambda self: self._dependency_manager,
+                                  doc="TODO")
 
     def load_config(self, config_path):
         """TODO: Docstring for load_config.
