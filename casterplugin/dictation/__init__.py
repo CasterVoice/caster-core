@@ -1,9 +1,9 @@
 from dragonfly import Grammar
 
 from castervoice import Plugin
-from castervoice.util.dragonfly import CCRRule
 
 from casterplugin.dictation.alphabet import Alphabet
+from casterplugin.util.dragonfly import CCRRule
 
 
 class DictationPlugin(Plugin):
