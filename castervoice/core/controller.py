@@ -1,4 +1,5 @@
 import logging
+import unittest
 import yaml
 
 try:
@@ -23,12 +24,14 @@ class Controller():
     # Class wide instance of Controller
     _controller = None
 
-    def __init__(self):
-        """TODO: to be defined. """
+    def __init__(self, config="config/default.yml"):
+        """
+            `config`: Dictionary or path to file containing configuration.
+        """
 
         self._log = logging.getLogger("castervoice")
 
-        self._config = self.load_config("config/default.yml")
+        self._config = self.load_config(config)
 
         self._log.info(" ---- Caster: Initializing ----")
         self._dependency_manager = DependencyManager()
@@ -45,23 +48,31 @@ class Controller():
     dependency_manager = property(lambda self: self._dependency_manager,
                                   doc="TODO")
 
-    def load_config(self, config_path):
+    engine = property(lambda self: self._engine,
+                      doc="TODO")
+
+    def load_config(self, config_path_or_dict):
         """TODO: Docstring for load_config.
         :returns: TODO
 
         """
 
-        self._log.info("Loading configuration: %s", config_path)
+        self._log.info("Loading configuration: %s", config_path_or_dict)
 
-        try:
-            with open(config_path, "r") as ymlfile:
-                config = yaml.load(ymlfile, Loader=Loader)
-        except yaml.YAMLError as error:
-            print("Error in configuration file: {}".format(error))
+        if isinstance(config_path_or_dict, dict):
+            config = config_path_or_dict
+        else:
+            print('===================ddddddfsdfasdfasdfasdf')
+            try:
+                with open(config_path_or_dict, "r") as ymlfile:
+                    config = yaml.load(ymlfile, Loader=Loader)
+            except yaml.YAMLError as error:
+                print("Error in configuration file: {}".format(error))
 
         for config_element in ["contexts", "plugins"]:
             if config_element not in config:
                 config[config_element] = []
+
         return config
 
     def init_engine(self):
@@ -92,3 +103,22 @@ class Controller():
         if cls._controller is None:
             cls._controller = Controller()
         return cls._controller
+
+
+class TestController(unittest.TestCase):
+    # pylint: disable=import-outside-toplevel
+
+    def test_speech_recogition(self):
+        import sys
+        from io import StringIO
+        config = {'engine': {'name': 'text'}}
+        controller = Controller(config)
+        saved_stdout = sys.stdout
+        try:
+            out = StringIO()
+            sys.stdout = out
+            controller.engine.speak("test words")
+            output = out.getvalue().strip()
+            self.assertEqual('test words', output)
+        finally:
+            sys.stdout = saved_stdout

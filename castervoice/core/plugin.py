@@ -1,4 +1,5 @@
 import logging
+import unittest
 
 
 class Plugin():
@@ -147,3 +148,14 @@ class Plugin():
         for grammar in self._grammars:
             grammar.unload()
             grammar.load()
+
+
+class MockPlugin(Plugin):
+    def get_context(self, desired_context=None):
+        return None
+
+
+class TestPlugin(unittest.TestCase):
+
+    def test_initialization(self):
+        MockPlugin("test_plugin", None)

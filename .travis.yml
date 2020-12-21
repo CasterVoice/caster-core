@@ -11,3 +11,5 @@ jobs:
   include:
     - stage: "Code Quality Checks"
       script: make lint
+    - stage: "Unit testing"
+      script: make test
