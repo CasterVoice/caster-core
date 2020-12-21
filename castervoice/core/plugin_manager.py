@@ -69,6 +69,6 @@ class PluginManager():
         :returns: TODO
 
         """
-        self._log.debug("Applying context '%s' to plugin '%s'",
-                        context, plugin_name)
+        self._log.info("Applying context '%s' to plugin '%s'",
+                       context, plugin_name)
         self._plugins[plugin_name].apply_context(context)

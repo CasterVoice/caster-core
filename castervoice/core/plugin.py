@@ -94,3 +94,15 @@ class Plugin():
                     # -> PR towards Dragonfly to dynamically
                     # switch a grammars context.
                     grammar._context = self._context  # pylint: disable=W0212
+
+            self._apply_context(context)
+
+    def _apply_context(self, context):
+        """TODO: Docstring for _apply_context.
+
+        Can be overridden by child classes.
+
+        :context: TODO
+        :returns: TODO
+
+        """
