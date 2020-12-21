@@ -6,10 +6,12 @@ class Plugin():
 
     """Docstring for MyClass. """
 
-    def __init__(self, name, manager):
+    def __init__(self, manager):
         """TODO: to be defined. """
 
-        self._name = name
+        self._id = self.__class__.__module__
+        class_name = self.__class__.__name__
+        self._name = "{}.{}".format(self._id, class_name)
 
         self._manager = manager
         self._loaded = False
@@ -18,6 +20,9 @@ class Plugin():
         self._context = None
 
         self._init_context()
+
+    id = property(lambda self: self._id,
+                  doc="TODO")
 
     name = property(lambda self: self._name,
                     doc="TODO")
@@ -159,4 +164,4 @@ class MockPlugin(Plugin):
 class TestPlugin(unittest.TestCase):
 
     def test_initialization(self):
-        MockPlugin("test_plugin", None)
+        MockPlugin(None)

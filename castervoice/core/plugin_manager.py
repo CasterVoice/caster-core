@@ -21,13 +21,11 @@ class PluginManager():
 
         self._controller = controller
 
-        # NOTE: This dictionary uses `name` from configuration as key
-        #       whereas a plugin's `name` is different (see `init_plugins`).
         self._plugins = {}
 
         self._watched_plugin_files = {}
 
-        self.init_plugins(config)
+        self._init_plugins(config)
 
     plugins = property(lambda self: self._plugins.values(),
                        doc="TODO")
@@ -35,7 +33,7 @@ class PluginManager():
     log = property(lambda self: logging.getLogger("castervoice.PluginManager"),
                    doc="TODO")
 
-    def init_plugins(self, config):
+    def _init_plugins(self, config):
         """Initialize plugins from configuration.
 
         :config: List of plugin configurations
@@ -87,15 +85,10 @@ class PluginManager():
                     and value.__module__ == plugin_id:
                 self.log.info("Initializing plugin: %s.%s",
                               plugin_id, name)
-                plugin_instance = value("{}.{}".format(plugin_id, name),
-                                        self)
+                plugin_instance = value(self)
 
-                instance_name = "{}.{}" \
-                    .format(plugin_instance.__class__.__module__,
-                            plugin_instance.__class__.__name__)
-
-                # Ensure we've got the name right (<module>.<class_name>)
-                assert instance_name == plugin_instance.name
+                # Ensure the plugin correctly set its id
+                assert plugin_instance.id == plugin_id
 
                 self._plugins[plugin_id] = plugin_instance
 
