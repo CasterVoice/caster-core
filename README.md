@@ -6,8 +6,8 @@
 
 To build the documentation:
 ```
+pip install . -r docs/requirements.txt
 cd docs
-pip install -r requirements.txt
 make html
 ```
 
