@@ -28,9 +28,9 @@ class PluginManager():
                    doc="TODO")
 
     def init_plugins(self, config):
-        """TODO: Docstring for load.
+        """Initialize plugins from configuration.
 
-        :config: TODO
+        :config: List of plugin configurations
         :returns: TODO
 
         """
@@ -63,3 +63,12 @@ class PluginManager():
         for plugin_name, plugin in self._plugins.items():
             self._log.info("Loading plugin: %s", plugin_name)
             plugin.load()
+
+    def apply_context(self, plugin_name, context):
+        """TODO: Docstring for apply_context.
+        :returns: TODO
+
+        """
+        self._log.debug("Applying context '%s' to plugin '%s'",
+                        context, plugin_name)
+        self._plugins[plugin_name].apply_context(context)

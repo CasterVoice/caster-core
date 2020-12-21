@@ -4,7 +4,7 @@ plugins:
   #             (also serves as the identifier for the plugin).
   #     `pip`: Python pip requirements specifier
   #            (see https://pip.pypa.io/en/stable/reference/pip_install/#requirement-specifiers).
-  - name: mycasterplugin.dictation
+  - name: casterplugin.dictation
   - name: castertmux
     pip: "git+https://github.com/Timoses/caster-tmux.git"
 
@@ -14,3 +14,23 @@ engine:
   #     `...`: Engine options
   name: kaldi
   model_dir: "/Users/Timoses/code/voice/caster/kaldi_model"
+
+contexts:
+  # Contexts can have the following values:
+  #     `name`: Name (identifier) of the context.
+  #     `executable`: Dragonfly AppContext executable.
+  #     `title`: Dragonfly AppContext title.
+  #     `extends`: Name (identifier) of another context to extend.
+  #     `<plugin_name>`: Plugin context selector.
+  #                      See plugin's documentation for available contexts.
+  #     `plugins`: List of plugin names which should be active for the context.
+  - name: tmux
+    executable: alacritty
+    plugins:
+      - castertmux
+  - name: vim
+    executable: alacritty
+    castertmux:
+      pane_cmd: nvim
+    plugins:
+      - casterplugin.dictation

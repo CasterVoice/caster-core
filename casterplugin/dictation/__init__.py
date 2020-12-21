@@ -84,3 +84,6 @@ class DictationPlugin(Plugin):
 
     def get_rules(self):
         return [CCRRule.create(Alphabet())]
+
+    def get_context(self, desired_context=None):
+        return None

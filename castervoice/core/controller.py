@@ -10,6 +10,7 @@ from dragonfly import get_engine
 
 from castervoice.core.plugin_manager import PluginManager
 from castervoice.core.dependency_manager import DependencyManager
+from castervoice.core.context_manager import ContextManager
 
 
 logging.basicConfig(level="INFO")
@@ -44,6 +45,7 @@ class Controller():
         self._dependency_manager = DependencyManager(self)
         self._engine = self.init_engine()
         self._plugin_manager = PluginManager(self, self._config["plugins"])
+        self._context_manager = ContextManager(self, self._config["contexts"])
 
         self._log.info(" ---- Caster: Loading plugins ----")
         self._plugin_manager.load_plugins()
@@ -68,11 +70,14 @@ class Controller():
 
         try:
             with open(config_path, "r") as ymlfile:
-                cfg = yaml.load(ymlfile, Loader=Loader)
+                config = yaml.load(ymlfile, Loader=Loader)
         except yaml.YAMLError as error:
             print("Error in configuration file: {}".format(error))
 
-        return cfg
+        for config_element in ["contexts", "plugins"]:
+            if config_element not in config:
+                config[config_element] = []
+        return config
 
     def init_engine(self):
         """TODO: Docstring for function.
