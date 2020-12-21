@@ -14,7 +14,7 @@ from castervoice.core.dependency_manager import DependencyManager
 from castervoice.core.context_manager import ContextManager
 
 
-class Controller():
+class Controller:
 
     """Docstring for Controller. """
 
@@ -26,22 +26,20 @@ class Controller():
             `config`: Dictionary or path to file containing configuration.
         """
 
-        self._log = logging.getLogger("castervoice")
-
         if config is None:
-            self._log.warning("Loading Controller without configuration")
+            self.log.warning("Loading Controller without configuration")
         self._config = self.load_config(config)
 
         self._dev_mode = dev_mode
 
-        self._log.info(" ---- Caster: Initializing ----")
+        self.log.info(" ---- Caster: Initializing ----")
         self._engine = self.init_engine()
         self._dependency_manager = DependencyManager(self)
 
         self._plugin_manager = PluginManager(self, self._config["plugins"])
         self._context_manager = ContextManager(self, self._config["contexts"])
 
-        self._log.info(" ---- Caster: Loading plugins ----")
+        self.log.info(" ---- Caster: Loading plugins ----")
         self._plugin_manager.load_plugins()
 
         Controller._controller = self
@@ -59,13 +57,15 @@ class Controller():
                         doc="Boolean indicating wether development"
                             " mode is active")
 
+    log = property(lambda self: logging.getLogger("castervoice"))
+
     def load_config(self, config_path_or_dict):
         """TODO: Docstring for load_config.
         :returns: TODO
 
         """
 
-        self._log.info("Loading configuration: %s", config_path_or_dict)
+        self.log.info("Loading configuration: %s", config_path_or_dict)
 
         if isinstance(config_path_or_dict, dict):
             config = config_path_or_dict

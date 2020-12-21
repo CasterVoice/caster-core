@@ -16,12 +16,14 @@ class DependencyManager():
     def __init__(self, controller):
         """TODO: to be defined. """
 
-        self._log = logging.getLogger("mycastervoice.DependencyManager")
-
         self._controller = controller
 
         if self._controller.dev_mode:
             self.reloader = ModuleReloader()
+
+    log = property(lambda self:
+                   logging.getLogger("castervoice.DependencyManager"),
+                   doc="TODO")
 
     def install_package(self, package_config):
         """TODO: Docstring for load_package.
@@ -60,8 +62,6 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
     """
 
     def __init__(self):
-        self._log = logging.getLogger("castervoice.ModuleReloader")
-
         self._baseimport = builtins.__import__
         builtins.__import__ = self._import
 
@@ -76,6 +76,10 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
         self.watched_plugin_modules = dict()
 
         get_current_engine().create_timer(self.reload, 10)
+
+    log = property(lambda self:
+                   logging.getLogger("castervoice.ModuleReloader"),
+                   doc="TODO")
 
     def __del__(self):
         builtins.__import__ = self._baseimport
@@ -135,7 +139,7 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
         changed_modules = []
         plugins_to_reload = []
 
-        self._log.debug('Checking for changed modules to be reloaded')
+        self.log.debug('Checking for changed modules to be reloaded')
 
         for name, info in self._modules.items():
 
@@ -163,16 +167,16 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
 
         if changed_modules:
             for plugin in plugins_to_reload:
-                self._log.info('Disabling and unloading plugin %s', plugin)
+                self.log.info('Disabling and unloading plugin %s', plugin)
                 plugin.disable()
                 plugin.unload()
 
             for rel in changed_modules:
-                self._log.info('Reloading changed module %s', rel)
+                self.log.info('Reloading changed module %s', rel)
                 importlib.reload(rel)
 
             for plugin in plugins_to_reload:
-                self._log.info('Reloading plugin module %s', plugin.__module__)
+                self.log.info('Reloading plugin module %s', plugin.__module__)
                 importlib.reload(sys.modules[plugin.__module__])
                 plugin.load()
 

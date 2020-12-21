@@ -11,9 +11,6 @@ class Plugin():
 
         self._name = name
 
-        self._log = logging.getLogger("castervoice.Plugin({})"
-                                      .format(self._name))
-
         self._manager = manager
         self._loaded = False
 
@@ -24,6 +21,10 @@ class Plugin():
 
     name = property(lambda self: self._name,
                     doc="TODO")
+
+    log = property(lambda self: logging.getLogger("castervoice.Plugin({})"
+                                                  .format(self._name)),
+                   doc="TODO")
 
     def _init_context(self):
         """Initialize Plugin to its default context.
@@ -42,13 +43,13 @@ class Plugin():
     def load(self):
         """Load plugin."""
         if not self._loaded:
-            self._log.info("Loading ...")
+            self.log.info("Loading ...")
 
             assert not self._grammars
 
             for grammar in self.get_grammars():
-                self._log.info("Adding grammar: %s(%s)",
-                               self._name, grammar.name)
+                self.log.info("Adding grammar: %s(%s)",
+                              self._name, grammar.name)
                 self._grammars.append(grammar)
 
             self.apply_context()
@@ -64,7 +65,7 @@ class Plugin():
 
         """
         if self._loaded:
-            self._log.info("Unloading ...")
+            self.log.info("Unloading ...")
             for grammar in self._grammars:
                 grammar.unload()
                 del grammar
@@ -78,8 +79,8 @@ class Plugin():
 
         """
         for grammar in self._grammars:
-            self._log.info("Enabling grammar: %s(%s)",
-                           self._name, grammar.name)
+            self.log.info("Enabling grammar: %s(%s)",
+                          self._name, grammar.name)
             grammar.enable()
 
     def disable(self):
@@ -88,8 +89,8 @@ class Plugin():
 
         """
         for grammar in self._grammars:
-            self._log.info("Disabling grammar: %s(%s)",
-                           self._name, grammar.name)
+            self.log.info("Disabling grammar: %s(%s)",
+                          self._name, grammar.name)
             for rule in grammar.rules:
                 rule.disable()
             grammar.disable()
@@ -129,7 +130,7 @@ class Plugin():
             self._context = context
 
         if self._context is not None:
-            self._log.info("Applying context '%s'", self._context)
+            self.log.info("Applying context '%s'", self._context)
             for grammar in self._grammars:
                 # pylint: disable=W0511
                 # TODO: We should not access private `_context` here..

@@ -19,7 +19,6 @@ class PluginManager():
 
         self._initialized = False
 
-        self._log = logging.getLogger("castervoice.PluginManager")
         self._controller = controller
 
         # NOTE: This dictionary uses `name` from configuration as key
@@ -33,7 +32,7 @@ class PluginManager():
     plugins = property(lambda self: self._plugins.values(),
                        doc="TODO")
 
-    log = property(lambda self: self._log,
+    log = property(lambda self: logging.getLogger("castervoice.PluginManager"),
                    doc="TODO")
 
     def init_plugins(self, config):
@@ -55,8 +54,8 @@ class PluginManager():
                 self._controller.dependency_manager. \
                     install_package(package_config)
             except Exception:  # pylint: disable=W0703
-                self._log.exception("Failed loading package '%s'",
-                                    package_config)
+                self.log.exception("Failed loading package '%s'",
+                                   package_config)
                 continue
 
         for plugin_id, plugin_config in local_config.items():
@@ -76,18 +75,18 @@ class PluginManager():
             return
 
         if plugin_config is not None:
-            self._log.warning('Plugin configurations are not implemented yet!')
+            self.log.warning('Plugin configurations are not implemented yet!')
 
         try:
             plugin_module = importlib.import_module(plugin_id)
         except ModuleNotFoundError:
-            self._log.exception("Failed loading plugin '%s'", plugin_id)
+            self.log.exception("Failed loading plugin '%s'", plugin_id)
 
         for name, value in getmembers(plugin_module, isclass):
             if issubclass(value, Plugin) and not value == Plugin \
                     and value.__module__ == plugin_id:
-                self._log.info("Initializing plugin: %s.%s",
-                               plugin_id, name)
+                self.log.info("Initializing plugin: %s.%s",
+                              plugin_id, name)
                 plugin_instance = value("{}.{}".format(plugin_id, name),
                                         self)
 
@@ -110,7 +109,7 @@ class PluginManager():
 
         """
         for plugin_id, plugin in self._plugins.items():
-            self._log.info("Loading plugin: %s", plugin_id)
+            self.log.info("Loading plugin: %s", plugin_id)
             plugin.load()
 
     def unload_plugins(self):
@@ -119,7 +118,7 @@ class PluginManager():
 
         """
         for plugin_id, plugin in self._plugins.items():
-            self._log.info("Unloading plugin: %s", plugin_id)
+            self.log.info("Unloading plugin: %s", plugin_id)
             plugin.unload()
 
     def apply_context(self, plugin_id, context):
@@ -127,8 +126,8 @@ class PluginManager():
         :returns: TODO
 
         """
-        self._log.info("Applying context '%s' to plugin '%s'",
-                       context, plugin_id)
+        self.log.info("Applying context '%s' to plugin '%s'",
+                      context, plugin_id)
         self._plugins[plugin_id].apply_context(context)
 
     def get_context(self, plugin_id, desired_context):

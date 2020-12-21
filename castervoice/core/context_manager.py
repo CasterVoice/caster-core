@@ -15,15 +15,14 @@ class ContextManager():
         :config: TODO
 
         """
-        self._log = logging.getLogger("castervoice.ContextManager")
-
         self._controller = controller
 
         self._config = config
         self._contexts = {}
         self.init_contexts(self._config)
 
-    log = property(lambda self: self._log,
+    log = property(lambda self:
+                   logging.getLogger("castervoice.ContextManager"),
                    doc="TODO")
 
     def init_contexts(self, config):
@@ -38,10 +37,10 @@ class ContextManager():
             try:
                 context_name = context_config["name"]
             except KeyError:
-                self._log.exception("Configured context requires a name!")
+                self.log.exception("Configured context requires a name!")
                 return
 
-            self._log.info("Initializing context: %s", context_name)
+            self.log.info("Initializing context: %s", context_name)
 
             context_plugins = context_config.pop("plugins", [])
             extends = context_config.pop("extends", None)
@@ -58,9 +57,9 @@ class ContextManager():
 
             for plugin_id in context_plugins:
                 if not isinstance(plugin_id, str):
-                    self._log.error("Plugin name in context.plugins"
-                                    " must be a string. Got: %s",
-                                    plugin_id)
+                    self.log.error("Plugin name in context.plugins"
+                                   " must be a string. Got: %s",
+                                   plugin_id)
                     continue
 
                 self._controller.plugin_manager.init_plugin(plugin_id)
