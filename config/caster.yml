@@ -9,7 +9,8 @@ plugins:
   # Example:
   #   packages:
   #     - pip: "file:///Users/Timoses/code/voice/caster-plugins"
-  packages: []
+  packages:
+    - pip: "git+https://github.com/CasterVoice/caster-plugins.git"
 
   # Plugins can be configured individually
   #<plugin_id>:
