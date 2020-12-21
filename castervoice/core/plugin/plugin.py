@@ -10,10 +10,18 @@ except ImportError:
 
 class Plugin():
 
-    """Docstring for MyClass. """
+    """
+
+    Plugins are pluggable content which can be plugged
+    into Caster.
+
+    So far, only *Grammer* plugins exist.
+
+    Plugins are active when the specified context is active.
+
+    """
 
     def __init__(self, manager):
-        """TODO: to be defined. """
 
         self._id = self.__class__.__module__
         class_name = self.__class__.__name__
@@ -34,21 +42,21 @@ class Plugin():
         self._init_context()
 
     id = property(lambda self: self._id,
-                  doc="TODO")
+                  doc="Plugin id (`plugin_id`).")
 
     name = property(lambda self: self._name,
-                    doc="TODO")
+                    doc="Plugin name.")
 
     log = property(lambda self: logging.getLogger("castervoice.Plugin({})"
                                                   .format(self._name)),
-                   doc="TODO")
+                   doc="Get class logger.")
 
     def set_state(self, data):
         self._state.data = data
 
     state = property(lambda self: self._state.data if self._state else None,
                      set_state,
-                     doc="TODO")
+                     doc="Plugin state.")
 
     def persist_state(self):
         self._state.persist()
@@ -59,8 +67,6 @@ class Plugin():
         The plugin's default context can be overridden by user
         configuration.
 
-        :returns: TODO
-
         """
         try:
             self._context = self.get_context()
@@ -68,7 +74,7 @@ class Plugin():
             return
 
     def load(self):
-        """Load plugin."""
+        """Load plugin's grammars."""
         if not self._loaded:
             self.log.info("Loading ...")
 
@@ -87,10 +93,7 @@ class Plugin():
             self._loaded = True
 
     def unload(self):
-        """TODO: Docstring for unload.
-        :returns: TODO
-
-        """
+        """Unload plugin's grammars."""
         if self._loaded:
             self.log.info("Unloading ...")
             for grammar in self._grammars:
@@ -101,20 +104,14 @@ class Plugin():
             self._loaded = False
 
     def enable(self):
-        """TODO: Docstring for enable.
-        :returns: TODO
-
-        """
+        """Enable plugin."""
         for grammar in self._grammars:
             self.log.info("Enabling grammar: %s(%s)",
                           self._name, grammar.name)
             grammar.enable()
 
     def disable(self):
-        """TODO: Docstring for disable.
-        :returns: TODO
-
-        """
+        """Disable plugin."""
         for grammar in self._grammars:
             self.log.info("Disabling grammar: %s(%s)",
                           self._name, grammar.name)
@@ -126,7 +123,7 @@ class Plugin():
         # pylint: disable=no-self-use
         """Gather plugins' grammars.
 
-        :returns: List of `Grammar`s
+        :returns: List of `Grammar`
 
         """
         return []
@@ -143,8 +140,7 @@ class Plugin():
         the desired context. It is up to the plugin to document which
         context configurations are available.
 
-        :context_name: TODO
-        :context_value: TODO
+        :param desired_context: Desired plugin context configuration
         :returns: Context
 
         """
@@ -168,12 +164,11 @@ class Plugin():
             self._apply_context(context)
 
     def _apply_context(self, context):
-        """TODO: Docstring for _apply_context.
+        """Child classes can override this method.
 
-        Can be overridden by child classes.
+        Called after context is applied in `apply_context`.
 
-        :context: TODO
-        :returns: TODO
+        :param context: Context
 
         """
 

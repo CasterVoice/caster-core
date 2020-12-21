@@ -8,7 +8,7 @@ except ImportError:
 
 from dragonfly import get_engine
 
-from castervoice.core.plugin_manager import PluginManager
+from castervoice.core.plugin import PluginManager
 from castervoice.core.dependency_manager import DependencyManager
 from castervoice.core.context_manager import ContextManager
 

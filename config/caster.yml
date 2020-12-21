@@ -1,14 +1,20 @@
+# Plugins configuration
 plugins:
   # `packages` is a list of package items.
   # Packages generally provide plugin modules.
   # Package installation is managed by Caster.
   # A package item can contain the following options:
   #   `pip`: Package to install with pip.
+  #
+  # Example:
+  #   packages:
+  #     - pip: "file:///Users/Timoses/code/voice/caster-plugins"
   packages: []
 
   # Plugins can be configured individually
   #<plugin_id>:
 
+# Engine configuration
 engine:
   # Currently only one engine is supported
   #     `name`: Engine name
@@ -16,20 +22,21 @@ engine:
   name: kaldi
   model_dir: "./kaldi_model"
 
+# Context configuration
 contexts:
   # Contexts can have the following values:
   #
-  #     `name`: Name (identifier) of the context.
-  #     `plugins`: List of plugin modules which should be active for
-  #                the context. The module serves as the plugin id.
+  #   `name`: Name (identifier) of the context.
+  #   `plugins`: List of plugin modules which should be active for
+  #              the context. The module serves as the plugin id.
   #
-  #     Below options specify the context. If non of the below are present
-  #     in a context then the plugins in that context are active globally.
-  #     `executable`: Dragonfly AppContext executable.
-  #     `title`: Dragonfly AppContext title.
-  #     `extends`: Name (identifier) of another context to extend.
-  #     `<plugin_id>`: Plugin context selector.
-  #                    See plugin's documentation for available contexts.
+  #   Below options specify the context. If non of the below are present
+  #   in a context then the plugins in that context are active globally.
+  #   `executable`: Dragonfly AppContext executable.
+  #   `title`: Dragonfly AppContext title.
+  #   `extends`: Name (identifier) of another context to extend.
+  #   `<plugin_id>`: Plugin context selector.
+  #                  See plugin's documentation for available contexts.
   - name: global
     plugins:
       - casterplugin.bringme

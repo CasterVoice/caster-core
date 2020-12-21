@@ -4,17 +4,28 @@ import importlib
 import logging
 import os
 
-from castervoice.core.plugin import Plugin
+from castervoice.core.plugin.plugin import Plugin
 
 
 class PluginManager():
 
-    """Docstring for PluginManager. """
+    """
+
+    Plugins are managed from the central Plugin Manager.
+
+    Each plugin is referenced by a `plugin_id` which is
+    resembled by the plugin's module path (e.g.
+    `casterplugin.dictation`).
+
+
+    """
 
     def __init__(self, controller, config, state_directory):
-        """TODO: to be defined.
+        """
 
-        :controller: TODO
+        :param controller: Caster controller.
+        :param config: Plugins configuration.
+        :param state_directory: Directory used for plugin states.
 
         """
 
@@ -36,19 +47,18 @@ class PluginManager():
         self._init_plugins(config)
 
     plugins = property(lambda self: self._plugins.values(),
-                       doc="TODO")
+                       doc="Retrieve list of initialized plugins.")
 
     log = property(lambda self: logging.getLogger("castervoice.PluginManager"),
-                   doc="TODO")
+                   doc="Get class logger.")
 
     state_directory = property(lambda self: self._state_directory,
-                               doc="TODO")
+                               doc="Get plugin state directory.")
 
     def _init_plugins(self, config):
         """Initialize plugins from configuration.
 
         :config: List of plugin configurations
-        :returns: TODO
 
         """
 
@@ -73,10 +83,9 @@ class PluginManager():
         self._initialized = True
 
     def init_plugin(self, plugin_id, plugin_config=None):
-        """TODO: Docstring for init_plugin.
+        """Initialize plugin.
 
-        :arg1: TODO
-        :returns: TODO
+        :param plugin_id: Plugin Id
 
         """
 
@@ -108,26 +117,24 @@ class PluginManager():
                         watch_plugin(plugin_id, plugin_instance)
 
     def load_plugins(self):
-        """TODO: Docstring for load_plugins.
-        :returns: TODO
-
-        """
+        """Load all initialized plugins."""
         for plugin_id, plugin in self._plugins.items():
             self.log.info("Loading plugin: %s", plugin_id)
             plugin.load()
 
     def unload_plugins(self):
-        """TODO: Docstring for unload_plugin.
-        :returns: TODO
-
-        """
+        """Unload all initialized plugins."""
         for plugin_id, plugin in self._plugins.items():
             self.log.info("Unloading plugin: %s", plugin_id)
             plugin.unload()
 
     def apply_context(self, plugin_id, context):
-        """TODO: Docstring for apply_context.
-        :returns: TODO
+        """Apply context to plugin with `plugin_id`
+
+        Overrides existing context.
+
+        :param plugin_id: Plugin Id
+        :param context: Context object to be applied
 
         """
         self.log.info("Applying context '%s' to plugin '%s'",
@@ -135,8 +142,11 @@ class PluginManager():
         self._plugins[plugin_id].apply_context(context)
 
     def get_context(self, plugin_id, desired_context):
-        """TODO: Docstring for get_context.
-        :returns: TODO
+        """Get context of plugin with `plugin_id`.
+
+        :param plugin_id: Plugin Id
+        :param desired_context: Desired plugin context configuration
+        :returns: Context
 
         """
         return self._plugins[plugin_id].get_context(desired_context)
