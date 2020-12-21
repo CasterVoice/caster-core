@@ -1,6 +1,7 @@
 import logging
 
-from dragonfly.grammar.context import LogicOrContext
+from dragonfly.grammar.context import LogicOrContext, LogicAndContext
+
 from castervoice.core.context import Context
 
 
@@ -43,7 +44,17 @@ class ContextManager():
             self._log.info("Initializing context: %s", context_name)
 
             context_plugins = context_config.pop("plugins", [])
-            self._contexts[context_name] = Context(self, context_config)
+            extends = context_config.pop("extends", None)
+
+            context = Context(self, context_config)
+
+            if isinstance(extends, str):
+                extended_context = self._contexts.get(extends)
+                if extended_context:
+                    self._contexts[context_name] = \
+                        LogicAndContext(extended_context, context)
+            else:
+                self._contexts[context_name] = context
 
             for plugin_name in context_plugins:
                 if plugin_name not in plugin_contexts:

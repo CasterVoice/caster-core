@@ -39,7 +39,7 @@ class Controller():
 
         self._log = logging.getLogger("castervoice")
 
-        self._config = self.load_config("user_config_dir/caster.yml")
+        self._config = self.load_config("config/default.yml")
 
         self._log.info(" ---- Caster: Initializing ----")
         self._dependency_manager = DependencyManager(self)
