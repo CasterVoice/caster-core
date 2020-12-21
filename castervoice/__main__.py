@@ -51,7 +51,8 @@ def main():
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
-    Controller()
+    controller = Controller.get()
+    controller.listen()
 
 
 if __name__ == "__main__":

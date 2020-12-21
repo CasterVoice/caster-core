@@ -34,6 +34,9 @@ class Controller():
 
     """Docstring for Controller. """
 
+    # Class wide instance of Controller
+    _controller = None
+
     def __init__(self):
         """TODO: to be defined. """
 
@@ -49,10 +52,6 @@ class Controller():
 
         self._log.info(" ---- Caster: Loading plugins ----")
         self._plugin_manager.load_plugins()
-
-        with self._engine.connection():
-            self._engine.do_recognition(_on_begin, _on_recognition,
-                                        _on_failure)
 
     plugin_manager = property(lambda self: self._plugin_manager,
                               doc="TODO")
@@ -88,3 +87,23 @@ class Controller():
         """
 
         return get_engine(**self._config["engine"])
+
+    def listen(self):
+        """TODO: Docstring for listen.
+        :returns: TODO
+
+        """
+        with self._engine.connection():
+            self._engine.do_recognition(_on_begin, _on_recognition,
+                                        _on_failure)
+
+    @classmethod
+    def get(cls):
+        """TODO: Docstring for get_controller.
+
+        :returns: TODO
+
+        """
+        if cls._controller is None:
+            cls._controller = Controller()
+        return cls._controller
