@@ -2,6 +2,7 @@ from inspect import getmembers, isclass
 import copy
 import importlib
 import logging
+import os
 
 from castervoice.core.plugin import Plugin
 
@@ -10,7 +11,7 @@ class PluginManager():
 
     """Docstring for PluginManager. """
 
-    def __init__(self, controller, config):
+    def __init__(self, controller, config, state_directory):
         """TODO: to be defined.
 
         :controller: TODO
@@ -23,7 +24,14 @@ class PluginManager():
 
         self._plugins = {}
 
-        self._watched_plugin_files = {}
+        self._state_directory = state_directory
+        if self._state_directory is not None:
+            if not os.path.exists(self._state_directory):
+                os.mkdir(self._state_directory)
+            elif not os.path.isdir(self._state_directory):
+                raise NotADirectoryError("State directory '%s' must be a"
+                                         " directory!"
+                                         % (self._state_directory))
 
         self._init_plugins(config)
 
@@ -32,6 +40,9 @@ class PluginManager():
 
     log = property(lambda self: logging.getLogger("castervoice.PluginManager"),
                    doc="TODO")
+
+    state_directory = property(lambda self: self._state_directory,
+                               doc="TODO")
 
     def _init_plugins(self, config):
         """Initialize plugins from configuration.

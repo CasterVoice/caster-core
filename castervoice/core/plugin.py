@@ -1,5 +1,12 @@
 import logging
+import os
 import unittest
+import yaml
+
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 
 class Plugin():
@@ -19,6 +26,12 @@ class Plugin():
         self._grammars = []
         self._context = None
 
+        self._state = None
+        if self._manager and self._manager.state_directory:
+            self._state = PluginState(os.path
+                                      .join(self._manager.state_directory,
+                                            "%s.state" % (self._id)))
+
         self._init_context()
 
     id = property(lambda self: self._id,
@@ -30,6 +43,16 @@ class Plugin():
     log = property(lambda self: logging.getLogger("castervoice.Plugin({})"
                                                   .format(self._name)),
                    doc="TODO")
+
+    def set_state(self, data):
+        self._state.data = data
+
+    state = property(lambda self: self._state.data if self._state else None,
+                     set_state,
+                     doc="TODO")
+
+    def persist_state(self):
+        self._state.persist()
 
     def _init_context(self):
         """Initialize Plugin to its default context.
@@ -154,6 +177,41 @@ class Plugin():
         :returns: TODO
 
         """
+
+
+class PluginFile:
+
+    def __init__(self, file_path):
+
+        self._data = None
+        self._type = self.__class__.__name__
+
+        try:
+            with open(file_path, "r") as ymlfile:
+                self._data = yaml.load(ymlfile, Loader=Loader)
+        except yaml.YAMLError as error:
+            print("Error in {} file: {}".format(self._type, error))
+        except FileNotFoundError:
+            pass
+
+    def set_data(self, new_data):
+        self._data = new_data
+
+    def get_data(self):
+        return self._data
+
+    data = property(get_data, set_data)
+
+
+class PluginState(PluginFile):
+
+    def __init__(self, file_path):
+        self._file_path = file_path
+        super().__init__(file_path)
+
+    def persist(self):
+        with open(self._file_path, 'w') as ymlfile:
+            ymlfile.write(yaml.dump(self._data, Dumper=Dumper))
 
 
 class MockPlugin(Plugin):

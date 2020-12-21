@@ -22,7 +22,7 @@ class Controller:
     _controller = None
 
     def __init__(self, config=None, config_dir=None,
-                 dev_mode=False):
+                 plugin_state_dir=None, dev_mode=False):
         """
             `config`: Dictionary or path to file containing configuration.
         """
@@ -36,7 +36,8 @@ class Controller:
         self._engine = self.init_engine()
         self._dependency_manager = DependencyManager(self)
 
-        self._plugin_manager = PluginManager(self, self._config["plugins"])
+        self._plugin_manager = PluginManager(self, self._config["plugins"],
+                                             plugin_state_dir)
         self._context_manager = ContextManager(self, self._config["contexts"])
 
         self.log.info(" ---- Caster: Loading plugins ----")

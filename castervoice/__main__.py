@@ -14,6 +14,10 @@ VERBOSITY_LOG_LEVEL = {
 DEFAULT_CONFIG_DIR = "config"
 
 
+def default_plugin_state_dir(config_dir):
+    return "{}/plugins.state".format(config_dir)
+
+
 def _on_begin():
     print("Speech start detected.")
 
@@ -38,6 +42,9 @@ def get_parser():
     parser.add_argument('--config-dir', '-c', default=DEFAULT_CONFIG_DIR,
                         help='Configuration directory')
 
+    parser.add_argument('--plugin-state-dir',
+                        help='Plugin state directory')
+
     parser.add_argument('--develop', '-d', action='store_true',
                         help='Development mode')
 
@@ -54,6 +61,12 @@ def verify_parsed_args(args):
 
 def get_args():
     args = get_parser().parse_args()
+
+    # If the user did not specify plugin_state_dir we
+    # set it to the default
+    if not args.plugin_state_dir:
+        args.plugin_state_dir = default_plugin_state_dir(args.config_dir)
+
     try:
         return verify_parsed_args(args)
     except ValueError as error:
@@ -75,6 +88,7 @@ def main():
 
     try:
         controller = Controller(config_dir=args.config_dir,
+                                plugin_state_dir=args.plugin_state_dir,
                                 dev_mode=args.develop)
     # pylint: disable=broad-except
     except Exception as error:
