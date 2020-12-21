@@ -1,5 +1,5 @@
 
-CV_PKGS=castervoice
+CV_PKGS=castervoice test
 
 all: lint test
 
@@ -8,4 +8,6 @@ lint:
 	pylint --rcfile=setup.cfg $(CV_PKGS)
 
 test:
-	python -m unittest discover -p '*.py' -s castervoice.core
+	python -m unittest discover -p '*.py' -s test.castervoice.core
+
+.PHONY: lint test

@@ -1,6 +1,5 @@
 import logging
 import os
-import unittest
 import yaml
 
 try:
@@ -212,14 +211,3 @@ class PluginState(PluginFile):
     def persist(self):
         with open(self._file_path, 'w') as ymlfile:
             ymlfile.write(yaml.dump(self._data, Dumper=Dumper))
-
-
-class MockPlugin(Plugin):
-    def get_context(self, desired_context=None):
-        return None
-
-
-class TestPlugin(unittest.TestCase):
-
-    def test_initialization(self):
-        MockPlugin(None)
