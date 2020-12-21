@@ -65,6 +65,9 @@ class PluginManager():
                 self._controller.dependency_manager \
                     .resolve_plugin(plugin_config, bool(dev_mode))
                 plugin_module = import_module(plugin_name)
+            except Exception:  # pylint: disable=W0703
+                self._log.exception("Failed loading plugin '%s'", plugin_name)
+                continue
 
             for name, value in getmembers(plugin_module, isclass):
                 if issubclass(value, Plugin) and not value == Plugin \
