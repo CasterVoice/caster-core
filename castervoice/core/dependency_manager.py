@@ -1,32 +1,50 @@
+import importlib
+import logging
+import site
 import subprocess
+import sys
 
 
 class DependencyManager():
 
     """Docstring for MyClass. """
 
-    def __init__(self, controller):
+    def __init__(self):
         """TODO: to be defined. """
 
-    def resolve_plugin(self, plugin_config, dev_mode=False):
-        """Resolve plugin dependencies.
+        self._log = logging.getLogger("mycastervoice.DependencyManager")
 
-        :plugin_config: TODO
-        :returns: TODO
+    def install_plugin(self, plugin_config, dev_mode=False):
+        """TODO: Docstring for install_plugin.
 
-        """
-        if "pip" in plugin_config:
-            self.resolve_pip(plugin_config["pip"], dev_mode)
-
-    def resolve_pip(self, pip_config, dev_mode=False):
-        """TODO: Docstring for resolve_pip.
-        :returns: TODO
+        :plugin_config: Plugin configuration
+        :dev_mode: Install plugin in development mode
+        :returns: Module object
 
         """
-        command = ['pip', 'install']
-        if dev_mode:
-            command.append('-e')
-        command.append(pip_config.get('url'))
+        plugin_name = plugin_config.get("name", None)
 
-        install = subprocess.Popen(command)
-        install.wait()
+        if plugin_name is None:
+            self._log.error("'name' required for plugin configuration: %s",
+                            plugin_config)
+            return None
+
+        try:
+            plugin_module = importlib.import_module(plugin_name)
+        except ModuleNotFoundError:
+            self._log.info("Missing dependency for plugin '%s';"
+                           " trying to resolve", plugin_name)
+            pip_url = plugin_config["pip"]["url"]
+
+            install_command = [sys.executable, '-m', 'pip', 'install']
+            if dev_mode:
+                install_command.append('-e')
+            install_command.append(pip_url)
+            subprocess.check_call(install_command)
+
+            importlib.invalidate_caches()
+            importlib.reload(site)
+        finally:
+            plugin_module = importlib.import_module(plugin_name)
+
+        return plugin_module

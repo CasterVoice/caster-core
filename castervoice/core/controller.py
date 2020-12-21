@@ -45,7 +45,7 @@ class Controller():
         self._config = self.load_config("config/default.yml")
 
         self._log.info(" ---- Caster: Initializing ----")
-        self._dependency_manager = DependencyManager(self)
+        self._dependency_manager = DependencyManager()
         self._engine = self.init_engine()
         self._plugin_manager = PluginManager(self, self._config["plugins"])
         self._context_manager = ContextManager(self, self._config["contexts"])

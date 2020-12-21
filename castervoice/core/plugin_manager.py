@@ -1,4 +1,3 @@
-from importlib import import_module
 from inspect import getmembers, isclass
 import hashlib
 import logging
@@ -25,6 +24,8 @@ class PluginManager():
         self._log = logging.getLogger("castervoice.PluginManager")
         self._controller = controller
 
+        # NOTE: This dictionary uses `name` from configuration as key
+        #       whereas a plugin's `name` is different (see `init_plugins`).
         self._plugins = {}
 
         self._watched_plugin_files = {}
@@ -57,14 +58,8 @@ class PluginManager():
                 dev_mode = True
 
             try:
-                plugin_module = import_module(plugin_name)
-            except ModuleNotFoundError:
-                self._log.info("Missing dependency for plugin '%s';"
-                               " trying to resolve",
-                               plugin_name)
-                self._controller.dependency_manager \
-                    .resolve_plugin(plugin_config, bool(dev_mode))
-                plugin_module = import_module(plugin_name)
+                plugin_module = self._controller.dependency_manager. \
+                    install_plugin(plugin_config, dev_mode)
             except Exception:  # pylint: disable=W0703
                 self._log.exception("Failed loading plugin '%s'", plugin_name)
                 continue
@@ -74,7 +69,16 @@ class PluginManager():
                         and value.__module__ == plugin_name:
                     self._log.info("Initializing plugin: %s.%s",
                                    plugin_name, name)
-                    plugin_instance = value(plugin_name, self)
+                    plugin_instance = value("{}.{}".format(plugin_name, name),
+                                            self)
+
+                    instance_name = "{}.{}" \
+                        .format(plugin_instance.__class__.__module__,
+                                plugin_instance.__class__.__name__)
+
+                    # Ensure we've got the name right (<module>.<class_name>)
+                    assert instance_name == plugin_instance.name
+
                     self._plugins[plugin_name] = plugin_instance
 
                     if bool(dev_mode):
