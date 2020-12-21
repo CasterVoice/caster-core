@@ -19,6 +19,9 @@ class PluginManager():
         :controller: TODO
 
         """
+
+        self._initialized = False
+
         self._log = logging.getLogger("castervoice.PluginManager")
         self._controller = controller
 
@@ -41,6 +44,10 @@ class PluginManager():
         :returns: TODO
 
         """
+
+        if self._initialized:
+            return
+
         for plugin_config in config:
 
             plugin_name = plugin_config["name"]
@@ -60,7 +67,8 @@ class PluginManager():
                 plugin_module = import_module(plugin_name)
 
             for name, value in getmembers(plugin_module, isclass):
-                if issubclass(value, Plugin) and not value == Plugin:
+                if issubclass(value, Plugin) and not value == Plugin \
+                        and value.__module__ == plugin_name:
                     self._log.info("Initializing plugin: %s.%s",
                                    plugin_name, name)
                     plugin_instance = value(self)
@@ -71,6 +79,8 @@ class PluginManager():
 
         if bool(self._watched_plugin_files):
             get_current_engine().create_timer(self._watch_plugin_files, 10)
+
+        self._initialized = True
 
     def load_plugins(self):
         """TODO: Docstring for load_plugins.
