@@ -37,6 +37,9 @@ def get_parser():
     parser.add_argument('--config-dir', '-c', default=DEFAULT_CONFIG_DIR,
                         help='Configuration directory')
 
+    parser.add_argument('--develop', '-d', action='store_true',
+                        help='Development mode')
+
     return parser
 
 
@@ -65,12 +68,11 @@ def main():
     :returns: TODO
 
     """
-
     args = get_args()
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
-    controller = Controller(args.config_dir)
+    controller = Controller(args.config_dir, args.develop)
     if args.verbose > 0:
         controller.listen(_on_begin, _on_recognition, _on_failure)
     else:

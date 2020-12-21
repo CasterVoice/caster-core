@@ -18,10 +18,10 @@ class Controller():
 
     """Docstring for Controller. """
 
-    # Class wide instance of Controller
+    # Class wide singleton instance of Controller
     _controller = None
 
-    def __init__(self, config=None):
+    def __init__(self, config=None, dev_mode=False):
         """
             `config`: Dictionary or path to file containing configuration.
         """
@@ -32,9 +32,12 @@ class Controller():
             self._log.warning("Loading Controller without configuration")
         self._config = self.load_config(config)
 
+        self._dev_mode = dev_mode
+
         self._log.info(" ---- Caster: Initializing ----")
-        self._dependency_manager = DependencyManager()
         self._engine = self.init_engine()
+        self._dependency_manager = DependencyManager(self)
+
         self._plugin_manager = PluginManager(self, self._config["plugins"])
         self._context_manager = ContextManager(self, self._config["contexts"])
 
@@ -51,6 +54,10 @@ class Controller():
 
     engine = property(lambda self: self._engine,
                       doc="TODO")
+
+    dev_mode = property(lambda self: self._dev_mode,
+                        doc="Boolean indicating wether development"
+                            " mode is active")
 
     def load_config(self, config_path_or_dict):
         """TODO: Docstring for load_config.

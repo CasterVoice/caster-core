@@ -20,21 +20,10 @@ class Plugin():
         self._grammars = []
         self._context = None
 
-        self._init_grammars()
         self._init_context()
 
     name = property(lambda self: self._name,
                     doc="TODO")
-
-    def _init_grammars(self):
-        """TODO: Docstring for _init_grammars.
-        :returns: TODO
-
-        """
-
-        for grammar in self.get_grammars():
-            self._log.info("Adding grammar: %s(%s)", self._name, grammar.name)
-            self._grammars.append(grammar)
 
     def _init_context(self):
         """Initialize Plugin to its default context.
@@ -54,6 +43,16 @@ class Plugin():
         """Load plugin."""
         if not self._loaded:
             self._log.info("Loading ...")
+
+            assert not self._grammars
+
+            for grammar in self.get_grammars():
+                self._log.info("Adding grammar: %s(%s)",
+                               self._name, grammar.name)
+                self._grammars.append(grammar)
+
+            self.apply_context()
+
             for grammar in self._grammars:
                 grammar.load()
 
@@ -68,7 +67,9 @@ class Plugin():
             self._log.info("Unloading ...")
             for grammar in self._grammars:
                 grammar.unload()
+                del grammar
 
+            self._grammars = []
             self._loaded = False
 
     def enable(self):
@@ -89,6 +90,8 @@ class Plugin():
         for grammar in self._grammars:
             self._log.info("Disabling grammar: %s(%s)",
                            self._name, grammar.name)
+            for rule in grammar.rules:
+                rule.disable()
             grammar.disable()
 
     def get_grammars(self):
@@ -124,13 +127,15 @@ class Plugin():
     def apply_context(self, context=None):
         if context is not None:
             self._context = context
+
+        if self._context is not None:
+            self._log.info("Applying context '%s'", self._context)
             for grammar in self._grammars:
-                if self._context is not None:
-                    # pylint: disable=W0511
-                    # TODO: We should not access private `_context` here..
-                    # -> PR towards Dragonfly to dynamically
-                    # switch a grammars context.
-                    grammar._context = self._context  # pylint: disable=W0212
+                # pylint: disable=W0511
+                # TODO: We should not access private `_context` here..
+                # -> PR towards Dragonfly to dynamically
+                # switch a grammars context.
+                grammar._context = self._context  # pylint: disable=W0212
 
             self._apply_context(context)
 
@@ -143,11 +148,6 @@ class Plugin():
         :returns: TODO
 
         """
-
-    def reload(self):
-        for grammar in self._grammars:
-            grammar.unload()
-            grammar.load()
 
 
 class MockPlugin(Plugin):

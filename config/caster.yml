@@ -6,10 +6,7 @@ plugins:
   #   `pip`: Package to install with pip.
   packages: []
 
-  # Plugins can be configured individually with the following:
-  #   `dev`: Configuration dictionary useful when developing a plugin.
-  #          Setting this to an empty dictionary (`{}`) enables
-  #          development mode for the package.
+  # Plugins can be configured individually
   #<plugin_id>:
 
 engine:
