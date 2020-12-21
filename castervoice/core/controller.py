@@ -21,14 +21,14 @@ class Controller:
     # Class wide singleton instance of Controller
     _controller = None
 
-    def __init__(self, config=None, dev_mode=False):
+    def __init__(self, config=None, config_dir=None,
+                 dev_mode=False):
         """
             `config`: Dictionary or path to file containing configuration.
         """
 
-        if config is None:
-            self.log.warning("Loading Controller without configuration")
-        self._config = self.load_config(config)
+        self._config_dir = config_dir
+        self._config = self.load_config(config, config_dir)
 
         self._dev_mode = dev_mode
 
@@ -59,29 +59,35 @@ class Controller:
 
     log = property(lambda self: logging.getLogger("castervoice"))
 
-    def load_config(self, config_path_or_dict):
+    def load_config(self, config, config_dir):
         """TODO: Docstring for load_config.
         :returns: TODO
 
         """
 
-        self.log.info("Loading configuration: %s", config_path_or_dict)
+        if config is None and config_dir is None:
+            self.log.warning("No configuration to load for Controller")
+            return None
 
-        if isinstance(config_path_or_dict, dict):
-            config = config_path_or_dict
-        else:
+        config_result = {}
+
+        if isinstance(config, dict):
+            self.log.info("Loading configuration: %s", config)
+            config_result.update(config)
+
+        if isinstance(config_dir, str):
             try:
-                with open(config_path_or_dict + "/caster.yml", "r") as ymlfile:
-                    config = yaml.load(ymlfile, Loader=Loader)
+                with open(config_dir + "/caster.yml", "r") as ymlfile:
+                    config_result.update(yaml.load(ymlfile, Loader=Loader))
             except yaml.YAMLError as error:
                 print("Error in configuration file: {}".format(error))
 
-        if "plugins" not in config:
-            config["plugins"] = dict()
-        if "contexts" not in config:
-            config["contexts"] = []
+        if "plugins" not in config_result:
+            config_result["plugins"] = dict()
+        if "contexts" not in config_result:
+            config_result["contexts"] = []
 
-        return config
+        return config_result
 
     def init_engine(self):
         """TODO: Docstring for function.

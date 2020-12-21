@@ -72,7 +72,8 @@ def main():
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
-    controller = Controller(args.config_dir, args.develop)
+    controller = Controller(config_dir=args.config_dir,
+                            dev_mode=args.develop)
     if args.verbose > 0:
         controller.listen(_on_begin, _on_recognition, _on_failure)
     else:
