@@ -14,7 +14,7 @@ engine:
   #     `name`: Engine name
   #     `...`: Engine options
   name: kaldi
-  model_dir: "/Users/Timoses/code/voice/caster/kaldi_model"
+  model_dir: "./kaldi_model"
 
 contexts:
   # Contexts can have the following values:
