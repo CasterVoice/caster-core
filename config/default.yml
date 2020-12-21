@@ -4,9 +4,21 @@ plugins:
   #             (also serves as the identifier for the plugin).
   #     `pip`: Python pip requirements specifier
   #            (see https://pip.pypa.io/en/stable/reference/pip_install/#requirement-specifiers).
+  #     `dev`: Developer mode configuration.
+  #            Also enabled if it is an empty dictionary.
   - name: casterplugin.dictation
   - name: castertmux
-    pip: "git+https://github.com/Timoses/caster-tmux.git"
+    pip:
+      url: "file:///Users/Timoses/code/voice/caster-tmux"
+    dev: {}
+  - name: castervim
+    pip:
+      url: "file:///Users/Timoses/code/voice/caster-vim"
+    dev: {}
+  - name: castergit
+    pip:
+      url: "file:///Users/Timoses/code/voice/caster-git"
+    dev: {}
 
 engine:
   # Currently only one engine is supported

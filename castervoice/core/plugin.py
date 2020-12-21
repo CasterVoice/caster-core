@@ -106,3 +106,8 @@ class Plugin():
         :returns: TODO
 
         """
+
+    def reload(self):
+        for grammar in self._grammars:
+            grammar.unload()
+            grammar.load()
