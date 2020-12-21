@@ -29,7 +29,8 @@ def _on_failure():
 
 
 def get_parser():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+            formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('--verbose', '-v', action='count',
                         default=0, help='Verbose logging')
@@ -72,8 +73,16 @@ def main():
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
-    controller = Controller(config_dir=args.config_dir,
-                            dev_mode=args.develop)
+    try:
+        controller = Controller(config_dir=args.config_dir,
+                                dev_mode=args.develop)
+    # pylint: disable=broad-except
+    except Exception as error:
+        logging.getLogger().error("Controller failed with: %s", error)
+        if args.verbose >= 2:
+            logging.getLogger().exception(error)
+        sys.exit(1)
+
     if args.verbose > 0:
         controller.listen(_on_begin, _on_recognition, _on_failure)
     else:
