@@ -31,7 +31,7 @@ class PluginManager():
 
         self.init_plugins(config)
 
-    plugins = property(lambda self: self._plugins,
+    plugins = property(lambda self: self._plugins.values(),
                        doc="TODO")
 
     log = property(lambda self: self._log,
@@ -74,7 +74,7 @@ class PluginManager():
                         and value.__module__ == plugin_name:
                     self._log.info("Initializing plugin: %s.%s",
                                    plugin_name, name)
-                    plugin_instance = value(self)
+                    plugin_instance = value(plugin_name, self)
                     self._plugins[plugin_name] = plugin_instance
 
                     if bool(dev_mode):
@@ -94,6 +94,15 @@ class PluginManager():
             self._log.info("Loading plugin: %s", plugin_name)
             plugin.load()
 
+    def unload_plugins(self):
+        """TODO: Docstring for unload_plugin.
+        :returns: TODO
+
+        """
+        for plugin_name, plugin in self._plugins.items():
+            self._log.info("Unloading plugin: %s", plugin_name)
+            plugin.unload()
+
     def apply_context(self, plugin_name, context):
         """TODO: Docstring for apply_context.
         :returns: TODO
@@ -102,6 +111,13 @@ class PluginManager():
         self._log.info("Applying context '%s' to plugin '%s'",
                        context, plugin_name)
         self._plugins[plugin_name].apply_context(context)
+
+    def get_context(self, plugin_name, desired_context):
+        """TODO: Docstring for get_context.
+        :returns: TODO
+
+        """
+        return self._plugins[plugin_name].get_context(desired_context)
 
     def watch_plugin(self, plugin_name, plugin_path):
         for file_path in self._watch_get_files_from_path(plugin_path):

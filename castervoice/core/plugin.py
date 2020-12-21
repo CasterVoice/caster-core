@@ -5,10 +5,10 @@ class Plugin():
 
     """Docstring for MyClass. """
 
-    def __init__(self, manager):
+    def __init__(self, name, manager):
         """TODO: to be defined. """
 
-        self._name = self.__class__.__module__ + '.' + self.__class__.__name__
+        self._name = name
 
         self._log = logging.getLogger("castervoice.Plugin({})"
                                       .format(self._name))
@@ -21,6 +21,9 @@ class Plugin():
 
         self._init_grammars()
         self._init_context()
+
+    name = property(lambda self: self._name,
+                    doc="TODO")
 
     def _init_grammars(self):
         """TODO: Docstring for _init_grammars.
@@ -49,10 +52,43 @@ class Plugin():
     def load(self):
         """Load plugin."""
         if not self._loaded:
+            self._log.info("Loading ...")
             for grammar in self._grammars:
                 grammar.load()
 
             self._loaded = True
+
+    def unload(self):
+        """TODO: Docstring for unload.
+        :returns: TODO
+
+        """
+        if self._loaded:
+            self._log.info("Unloading ...")
+            for grammar in self._grammars:
+                grammar.unload()
+
+            self._loaded = False
+
+    def enable(self):
+        """TODO: Docstring for enable.
+        :returns: TODO
+
+        """
+        for grammar in self._grammars:
+            self._log.info("Enabling grammar: %s(%s)",
+                           self._name, grammar.name)
+            grammar.enable()
+
+    def disable(self):
+        """TODO: Docstring for disable.
+        :returns: TODO
+
+        """
+        for grammar in self._grammars:
+            self._log.info("Disabling grammar: %s(%s)",
+                           self._name, grammar.name)
+            grammar.disable()
 
     def get_grammars(self):
         # pylint: disable=no-self-use

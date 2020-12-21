@@ -74,5 +74,5 @@ class ContextManager():
         :returns: TODO
 
         """
-        return self._controller.plugin_manager.plugins[plugin_name] \
-            .get_context(desired_context)
+        return self._controller.plugin_manager \
+            .get_context(plugin_name, desired_context)
