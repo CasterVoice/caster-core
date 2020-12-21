@@ -12,6 +12,20 @@ VERBOSITY_LOG_LEVEL = {
 }
 
 
+def _on_begin():
+    print("Speech start detected.")
+
+
+def _on_recognition(words, rule, node):
+    print(u"Recognized: %s" % u" ".join(words))
+    print(u"    Executing rule: %s" % (rule))
+    print(u"    Action: %s" % (node.value()))
+
+
+def _on_failure():
+    print("Sorry, what was that?")
+
+
 def get_parser():
     parser = argparse.ArgumentParser()
 
@@ -52,7 +66,10 @@ def main():
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
     controller = Controller.get()
-    controller.listen()
+    if args.verbose > 0:
+        controller.listen(_on_begin, _on_recognition, _on_failure)
+    else:
+        controller.listen()
 
 
 if __name__ == "__main__":

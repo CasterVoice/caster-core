@@ -16,20 +16,6 @@ from castervoice.core.context_manager import ContextManager
 logging.basicConfig(level="INFO")
 
 
-def _on_begin():
-    print("Speech start detected.")
-
-
-def _on_recognition(words):
-    message = u"Recognized: %s" % u" ".join(words)
-
-    print(message)
-
-
-def _on_failure():
-    print("Sorry, what was that?")
-
-
 class Controller():
 
     """Docstring for Controller. """
@@ -88,14 +74,13 @@ class Controller():
 
         return get_engine(**self._config["engine"])
 
-    def listen(self):
+    def listen(self, on_begin=None, on_recognition=None, on_failure=None):
         """TODO: Docstring for listen.
         :returns: TODO
 
         """
         with self._engine.connection():
-            self._engine.do_recognition(_on_begin, _on_recognition,
-                                        _on_failure)
+            self._engine.do_recognition(on_begin, on_recognition, on_failure)
 
     @classmethod
     def get(cls):
