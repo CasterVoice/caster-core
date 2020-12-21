@@ -9,15 +9,19 @@ plugins:
   - name: casterplugin.dictation
   - name: castertmux
     pip:
-      url: "file:///Users/Timoses/code/voice/caster-tmux"
+      url: "file:///Users/Timoses/code/voice/caster-plugins"
     dev: {}
   - name: castervim
     pip:
-      url: "file:///Users/Timoses/code/voice/caster-vim"
+      url: "file:///Users/Timoses/code/voice/caster-plugins"
     dev: {}
   - name: castergit
     pip:
-      url: "file:///Users/Timoses/code/voice/caster-git"
+      url: "file:///Users/Timoses/code/voice/caster-plugins"
+    dev: {}
+  - name: castercontrol
+    pip:
+      url: "file:///Users/Timoses/code/voice/caster-plugins"
     dev: {}
 
 engine:
@@ -46,5 +50,4 @@ contexts:
     castertmux:
       pane_cmd: nvim
     plugins:
-      - casterplugin.dictation
       - castervim
