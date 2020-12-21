@@ -40,9 +40,11 @@ contexts:
     executable: alacritty
     plugins:
       - castertmux
+      - castergit
   - name: vim
     executable: alacritty
     castertmux:
       pane_cmd: nvim
     plugins:
       - casterplugin.dictation
+      - castervim
