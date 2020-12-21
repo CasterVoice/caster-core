@@ -7,22 +7,6 @@ plugins:
   #     `dev`: Developer mode configuration.
   #            Also enabled if it is an empty dictionary.
   - name: casterplugin.dictation
-  - name: castertmux
-    pip:
-      url: "file:///Users/Timoses/code/voice/caster-plugins"
-    dev: {}
-  - name: castervim
-    pip:
-      url: "file:///Users/Timoses/code/voice/caster-plugins"
-    dev: {}
-  - name: castergit
-    pip:
-      url: "file:///Users/Timoses/code/voice/caster-plugins"
-    dev: {}
-  - name: castercontrol
-    pip:
-      url: "file:///Users/Timoses/code/voice/caster-plugins"
-    dev: {}
 
 engine:
   # Currently only one engine is supported
@@ -31,7 +15,7 @@ engine:
   name: kaldi
   model_dir: "/Users/Timoses/code/voice/caster/kaldi_model"
 
-contexts:
+contexts: []
   # Contexts can have the following values:
   #     `name`: Name (identifier) of the context.
   #     `executable`: Dragonfly AppContext executable.
@@ -40,14 +24,3 @@ contexts:
   #     `<plugin_name>`: Plugin context selector.
   #                      See plugin's documentation for available contexts.
   #     `plugins`: List of plugin names which should be active for the context.
-  - name: tmux
-    executable: alacritty
-    plugins:
-      - castertmux
-      - castergit
-  - name: vim
-    executable: alacritty
-    castertmux:
-      pane_cmd: nvim
-    plugins:
-      - castervim

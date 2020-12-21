@@ -11,6 +11,8 @@ VERBOSITY_LOG_LEVEL = {
         2: 'DEBUG'
 }
 
+DEFAULT_CONFIG_DIR = "config"
+
 
 def _on_begin():
     print("Speech start detected.")
@@ -31,6 +33,9 @@ def get_parser():
 
     parser.add_argument('--verbose', '-v', action='count',
                         default=0, help='Verbose logging')
+
+    parser.add_argument('--config-dir', '-c', default=DEFAULT_CONFIG_DIR,
+                        help='Configuration directory')
 
     return parser
 
@@ -65,7 +70,7 @@ def main():
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
-    controller = Controller.get()
+    controller = Controller(args.config_dir)
     if args.verbose > 0:
         controller.listen(_on_begin, _on_recognition, _on_failure)
     else:

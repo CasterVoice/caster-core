@@ -24,13 +24,15 @@ class Controller():
     # Class wide instance of Controller
     _controller = None
 
-    def __init__(self, config="config/default.yml"):
+    def __init__(self, config=None):
         """
             `config`: Dictionary or path to file containing configuration.
         """
 
         self._log = logging.getLogger("castervoice")
 
+        if config is None:
+            self._log.warning("Loading Controller without configuration")
         self._config = self.load_config(config)
 
         self._log.info(" ---- Caster: Initializing ----")
@@ -62,9 +64,8 @@ class Controller():
         if isinstance(config_path_or_dict, dict):
             config = config_path_or_dict
         else:
-            print('===================ddddddfsdfasdfasdfasdf')
             try:
-                with open(config_path_or_dict, "r") as ymlfile:
+                with open(config_path_or_dict + "/caster.yml", "r") as ymlfile:
                     config = yaml.load(ymlfile, Loader=Loader)
             except yaml.YAMLError as error:
                 print("Error in configuration file: {}".format(error))
@@ -100,8 +101,6 @@ class Controller():
         :returns: TODO
 
         """
-        if cls._controller is None:
-            cls._controller = Controller()
         return cls._controller
 
 
