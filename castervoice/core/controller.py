@@ -70,9 +70,10 @@ class Controller():
             except yaml.YAMLError as error:
                 print("Error in configuration file: {}".format(error))
 
-        for config_element in ["contexts", "plugins"]:
-            if config_element not in config:
-                config[config_element] = []
+        if "plugins" not in config:
+            config["plugins"] = dict()
+        if "contexts" not in config:
+            config["contexts"] = []
 
         return config
 

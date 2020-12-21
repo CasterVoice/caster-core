@@ -56,23 +56,31 @@ class ContextManager():
             else:
                 self._contexts[context_name] = context
 
-            for plugin_name in context_plugins:
-                if plugin_name not in plugin_contexts:
-                    plugin_contexts[plugin_name] = []
-                plugin_contexts[plugin_name] \
+            for plugin_id in context_plugins:
+                if not isinstance(plugin_id, str):
+                    self._log.error("Plugin name in context.plugins"
+                                    " must be a string. Got: %s",
+                                    plugin_id)
+                    continue
+
+                self._controller.plugin_manager.init_plugin(plugin_id)
+
+                if plugin_id not in plugin_contexts:
+                    plugin_contexts[plugin_id] = []
+                plugin_contexts[plugin_id] \
                     .append(self._contexts[context_name])
 
         # Plugins may be present in various contexts
-        for plugin_name in plugin_contexts:
+        for plugin_id in plugin_contexts:
             plugin_manager = self._controller.plugin_manager
             plugin_manager \
-                .apply_context(plugin_name,
-                               LogicOrContext(*plugin_contexts[plugin_name]))
+                .apply_context(plugin_id,
+                               LogicOrContext(*plugin_contexts[plugin_id]))
 
-    def get_plugin_context(self, plugin_name, desired_context):
+    def get_plugin_context(self, plugin_id, desired_context):
         """TODO: Docstring for get_plugin_context.
         :returns: TODO
 
         """
         return self._controller.plugin_manager \
-            .get_context(plugin_name, desired_context)
+            .get_context(plugin_id, desired_context)

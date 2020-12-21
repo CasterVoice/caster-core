@@ -27,9 +27,9 @@ class Context(DragonflyContext):
                                              title=title))
 
         # Apply plugin specific contexts
-        for plugin_name, desired_context in config.items():
+        for plugin_id, desired_context in config.items():
             try:
-                plugin_context = manager.get_plugin_context(plugin_name,
+                plugin_context = manager.get_plugin_context(plugin_id,
                                                             desired_context)
                 self._contexts.append(plugin_context)
 
@@ -37,7 +37,7 @@ class Context(DragonflyContext):
                 manager.log.exception("Error while applying plugin specific"
                                       " context in context '%s'."
                                       " Unable to get context for plugin"
-                                      " %s: %s" % (self._name, plugin_name,
+                                      " %s: %s" % (self._name, plugin_id,
                                                    error))
 
     def matches(self, executable, title, handle):

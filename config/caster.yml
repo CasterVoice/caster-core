@@ -1,12 +1,16 @@
 plugins:
-  # Plugins can have the following values:
-  #     `name`: Python package containing the plugin
-  #             (also serves as the identifier for the plugin).
-  #     `pip`: Python pip requirements specifier
-  #            (see https://pip.pypa.io/en/stable/reference/pip_install/#requirement-specifiers).
-  #     `dev`: Developer mode configuration.
-  #            Also enabled if it is an empty dictionary.
-  - name: casterplugin.dictation
+  # `packages` is a list of package items.
+  # Packages generally provide plugin modules.
+  # Package installation is managed by Caster.
+  # A package item can contain the following options:
+  #   `pip`: Package to install with pip.
+  packages: []
+
+  # Plugins can be configured individually with the following:
+  #   `dev`: Configuration dictionary useful when developing a plugin.
+  #          Setting this to an empty dictionary (`{}`) enables
+  #          development mode for the package.
+  #<plugin_id>:
 
 engine:
   # Currently only one engine is supported
@@ -15,12 +19,20 @@ engine:
   name: kaldi
   model_dir: "/Users/Timoses/code/voice/caster/kaldi_model"
 
-contexts: []
+contexts:
   # Contexts can have the following values:
+  #
   #     `name`: Name (identifier) of the context.
+  #     `plugins`: List of plugin modules which should be active for
+  #                the context. The module serves as the plugin id.
+  #
+  #     Below options specify the context. If non of the below are present
+  #     in a context then the plugins in that context are active globally.
   #     `executable`: Dragonfly AppContext executable.
   #     `title`: Dragonfly AppContext title.
   #     `extends`: Name (identifier) of another context to extend.
-  #     `<plugin_name>`: Plugin context selector.
-  #                      See plugin's documentation for available contexts.
-  #     `plugins`: List of plugin names which should be active for the context.
+  #     `<plugin_id>`: Plugin context selector.
+  #                    See plugin's documentation for available contexts.
+  - name: global
+    plugins:
+      - casterplugin.dictation
