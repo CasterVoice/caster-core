@@ -14,9 +14,6 @@ from castervoice.core.dependency_manager import DependencyManager
 from castervoice.core.context_manager import ContextManager
 
 
-logging.basicConfig(level="INFO")
-
-
 class Controller():
 
     """Docstring for Controller. """

@@ -6,9 +6,9 @@ from castervoice.core import Controller
 
 
 VERBOSITY_LOG_LEVEL = {
-        0: 'WARNING',
-        1: 'INFO',
-        2: 'DEBUG'
+        0: logging.WARNING,
+        1: logging.INFO,
+        2: logging.DEBUG
 }
 
 DEFAULT_CONFIG_DIR = "config"
