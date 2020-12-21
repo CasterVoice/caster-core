@@ -1,0 +1,12 @@
+plugins:
+  # Plugins can have the following values:
+  #     `name`: Python package containing the plugin
+  #             (also serves as the identifier for the plugin).
+  - name: casterplugin.dictation
+
+engine:
+  # Currently only one engine is supported
+  #     `name`: Engine name
+  #     `...`: Engine options
+  name: kaldi
+  model_dir: "/Users/Timoses/code/voice/caster/kaldi_model"

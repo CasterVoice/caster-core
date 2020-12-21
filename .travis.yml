@@ -1,0 +1,13 @@
+language: python
+
+# Cache pip installed modules between CI runs
+cache: pip
+
+install:
+  - pip install .
+  - pip install -r requirements.txt
+
+jobs:
+  include:
+    - stage: "Code Quality Checks"
+      script: make lint
