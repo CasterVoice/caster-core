@@ -44,6 +44,8 @@ class Controller():
         self._log.info(" ---- Caster: Loading plugins ----")
         self._plugin_manager.load_plugins()
 
+        Controller._controller = self
+
     plugin_manager = property(lambda self: self._plugin_manager,
                               doc="TODO")
 
