@@ -1,7 +1,5 @@
 import logging
 
-from dragonfly import Grammar
-
 
 class Plugin():
 
@@ -18,25 +16,23 @@ class Plugin():
         self._manager = manager
         self._loaded = False
 
-        self._rules = []
-        self._grammar = None
+        self._grammars = []
         self._context = None
 
-        self.init_rules()
-        self.init_context()
+        self._init_grammars()
+        self._init_context()
 
-    def init_rules(self):
-        """Initialize plugin grammar rules.
-
+    def _init_grammars(self):
+        """TODO: Docstring for _init_grammars.
         :returns: TODO
 
         """
 
-        for rule in self.get_rules():
-            self._log.info("Instantiating rule: %s(%s)", self._name, rule.name)
-            self._rules.append(rule)
+        for grammar in self.get_grammars():
+            self._log.info("Adding grammar: %s(%s)", self._name, grammar.name)
+            self._grammars.append(grammar)
 
-    def init_context(self):
+    def _init_context(self):
         """Initialize Plugin to its default context.
 
         The plugin's default context can be overridden by user
@@ -53,26 +49,16 @@ class Plugin():
     def load(self):
         """Load plugin."""
         if not self._loaded:
-            self._grammar = Grammar(self._name)
-            for rule in self._rules:
-                self._grammar.add_rule(rule)
+            for grammar in self._grammars:
+                grammar.load()
+
             self._loaded = True
 
-        if not self._grammar.loaded:
-            self._grammar.load()
-
-        if self._context is not None:
-            # pylint: disable=W0511
-            # TODO: We should not access private `_context` here..
-            # -> PR towards Dragonfly to dynamically
-            # switch a grammars context.
-            self._grammar._context = self._context  # pylint: disable=W0212
-
-    def get_rules(self):
+    def get_grammars(self):
         # pylint: disable=no-self-use
-        """Gather grammar rules from plugin.
+        """Gather plugins' grammars.
 
-        :returns: List of `Rule`s
+        :returns: List of `Grammar`s
 
         """
         return []
@@ -98,11 +84,13 @@ class Plugin():
         raise NotImplementedError("Plugin '%s' does not provide any"
                                   " contexts" % (self._name))
 
-    def apply_context(self, context):
-        self._context = context
-        if self._grammar is not None:
-            # pylint: disable=W0511
-            # TODO: We should not access private `_context` here..
-            # -> PR towards Dragonfly to dynamically
-            # switch a grammars context.
-            self._grammar._context = context  # pylint: disable=W0212
+    def apply_context(self, context=None):
+        if context is not None:
+            self._context = context
+            for grammar in self._grammars:
+                if self._context is not None:
+                    # pylint: disable=W0511
+                    # TODO: We should not access private `_context` here..
+                    # -> PR towards Dragonfly to dynamically
+                    # switch a grammars context.
+                    grammar._context = self._context  # pylint: disable=W0212
