@@ -32,4 +32,5 @@ contexts:
   #                    See plugin's documentation for available contexts.
   - name: global
     plugins:
+      - casterplugin.bringme
       - casterplugin.dictation
