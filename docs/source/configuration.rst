@@ -1,5 +1,5 @@
 Configuration
 =============
 
-.. literalinclude:: ../../config/caster.yml
+.. literalinclude:: ../../casterconfig/caster.yml
    :language: yaml

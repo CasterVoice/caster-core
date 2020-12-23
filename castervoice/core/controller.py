@@ -1,5 +1,9 @@
 import logging
+import os
 import yaml
+
+# Since Python >= 3.7
+import importlib.resources as pkg_resources
 
 try:
     from yaml import CLoader as Loader
@@ -8,6 +12,7 @@ except ImportError:
 
 from dragonfly import get_engine
 
+import casterconfig
 from castervoice.core.plugin import PluginManager
 from castervoice.core.dependency_manager import DependencyManager
 from castervoice.core.context_manager import ContextManager
@@ -60,8 +65,13 @@ class Controller:
     log = property(lambda self: logging.getLogger("castervoice"))
 
     def load_config(self, config, config_dir):
-        """TODO: Docstring for load_config.
-        :returns: TODO
+        """
+
+        Load configuration. If no `caster.yml` exists in `config_dir`
+        it is created only if the parent directory of `config_dir`
+        is an existing directory.
+
+        :returns: Configuration dictionary
 
         """
 
@@ -81,6 +91,13 @@ class Controller:
                     config_result.update(yaml.load(ymlfile, Loader=Loader))
             except yaml.YAMLError as error:
                 print("Error in configuration file: {}".format(error))
+            except FileNotFoundError as error:
+                self.log.info("Configuration file was not found in specified "
+                              "path '%s': %s ",
+                              config_dir, error)
+                self.log.info("Attempting to create configuration...")
+                self.create_config(config_dir)
+                return self.load_config(config, config_dir)
 
         if "plugins" not in config_result:
             config_result["plugins"] = dict()
@@ -88,6 +105,22 @@ class Controller:
             config_result["contexts"] = []
 
         return config_result
+
+    def create_config(self, config_dir):
+        if not os.path.isdir(config_dir):
+
+            if not os.path.isdir(os.path.dirname(config_dir)):
+                raise FileNotFoundError("Configuration directory base path "
+                                        "'%s' does not exist!" %
+                                        os.path.dirname(config_dir))
+
+            os.mkdir(config_dir)
+
+        with open(config_dir + "/caster.yml", 'w') as config_file:
+            config_file.write(pkg_resources.read_text(casterconfig,
+                                                      'caster.yml'))
+
+        self.log.info("Successfully created configuration in '%s'", config_dir)
 
     def init_engine(self):
         """Initialize engine from configuration
