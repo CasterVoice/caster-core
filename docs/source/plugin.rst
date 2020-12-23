@@ -16,13 +16,13 @@ automatically when *Caster* starts.
 For example, the following will install `Timoses Caster Plugins`_ package:
 
 
-.. _Timoses Caster Plugins: https://github.com/Timoses/caster-plugins
+.. _Timoses Caster Plugins: https://github.com/Timoses/caster-timoses
 
 .. code-block:: yaml
 
     plugins:
       packages:
-        - pip: "https://github.com/Timoses/caster-plugins"
+        - pip: "git+https://github.com/Timoses/caster-plugins.git"
 
 
 Once the package is included its plugins can be referenced in plugin list of a context section within the :doc:`configuration file</configuration>` like so:
