@@ -90,14 +90,24 @@ class Controller:
         return config_result
 
     def init_engine(self):
-        """TODO: Docstring for function.
+        """Initialize engine from configuration
 
-        :arg1: TODO
-        :returns: TODO
-
+        :returns: Engine object
         """
 
-        return get_engine(**self._config["engine"])
+        for engine_type in ['kaldi', 'natlink', 'sapi5', 'text']:
+            engine_config = self._config["engine"].get(engine_type)
+            if engine_config is not None:
+                break
+
+        if engine_config is None:
+            raise ValueError("Missing `engine` configuration! Received '%s'"
+                             % self._config["engine"])
+
+        dragonfly_engine = engine_config.get('options', {})
+        dragonfly_engine.update(dict([('name', engine_type)]))
+
+        return get_engine(**dragonfly_engine)
 
     def listen(self, on_begin=None, on_recognition=None, on_failure=None):
         """TODO: Docstring for listen.

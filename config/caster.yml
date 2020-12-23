@@ -17,11 +17,16 @@ plugins:
 
 # Engine configuration
 engine:
-  # Currently only one engine is supported
-  #     `name`: Engine name
-  #     `...`: Engine options
-  name: kaldi
-  model_dir: "./kaldi_model"
+  # The following engines are available:
+  #     * `kaldi`: Kaldi
+  #     * `natlink`: Dragon NaturallySpeaking
+  #     * `sapi5`: WSR
+  # To use an engine without any further configuration
+  # use `{}`. For example:
+  #     natlink: {}
+  kaldi:
+    options:
+      model_dir: "./kaldi_model"
 
 # Context configuration
 contexts:
