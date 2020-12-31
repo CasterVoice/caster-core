@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
+
+[tool.setuptools_scm]
+
+
+
+# PyLint
+#[tool.pylint.master]
+## Use multiple processes to speed up Pylint. Specifying 0 will auto-detect the
+## number of processors available to use.
+#jobs=1
+#
+#[tool.pylint.messages_control]
+#disable="""
+#    invalid-name,
+#    missing-module-docstring,
+#    missing-class-docstring,
+#    missing-function-docstring,
+#"""
+#
+#[tool.pylint.design]
+## Minimum number of public methods for a class (see R0903).
+#min-public-methods=0
+#
+#
+### Flake8
+##[tool.flake8]
+##per-file-ignores =
+##    # imported but unused
+##    __init__.py: F401

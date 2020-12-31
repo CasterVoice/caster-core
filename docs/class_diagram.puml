@@ -1,0 +1,69 @@
+@startuml
+
+hide empty members
+
+Controller *-- "1" DependencyManager
+Controller *-- "1" PluginManager
+Controller *-- "1" ContextManager
+
+ContextManager *-- "1..*" CasterContext
+Plugin o-- CasterContext
+
+PluginManager *-- "1..*" Plugin
+
+Class Controller {
+    -_config : Dict
+}
+
+Class PluginManager {
+    -_plugins
+    +init_plugins()
+    +load_plugins()
+}
+
+Class DependencyManager {
+    +load()
+    +install()
+}
+
+Class ContextManager {
+    -_contexts : CasterContext[]
+    +enableContext(context : CasterContext)
+    +disableContext(context : CasterContext)
+}
+
+abstract Class Plugin {
+    -_context : CasterContext[]
+    -_manager : PluginManager
+    -_grammar : Grammar
+    -_storeData : Dict
+    +enable()
+    +disable()
+    +init_rules()
+    +load()
+    +getStoreEntry(entry_key : String)
+    +setStoreEntry(entry_key : String)
+}
+
+Class CasterContext {
+    -_context : Context
+    -_enabled : Bool
+    +enable()
+    +disable()
+    +matches(executable : String, title : String)
+}
+
+namespace dragonfly {
+    Context <|-- .CasterContext
+    Rule <|-- some_plugin.SomeRule
+}
+
+
+PluginManager --> some_plugin.SomePlugin : load
+Plugin --> some_plugin.SomeRule : load
+package some_plugin {
+  .Plugin <|.. SomePlugin
+}
+
+@enduml
+
