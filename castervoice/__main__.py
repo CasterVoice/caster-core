@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os
 import sys
 
 from castervoice.core import Controller
@@ -87,7 +88,7 @@ def main():
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
 
     try:
-        controller = Controller(config_dir=args.config_dir,
+        controller = Controller(config_dir=os.path.abspath(args.config_dir),
                                 plugin_state_dir=args.plugin_state_dir,
                                 dev_mode=args.develop)
     # pylint: disable=broad-except

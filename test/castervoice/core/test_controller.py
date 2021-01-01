@@ -9,7 +9,7 @@ class TestController(unittest.TestCase):
     def test_speech_recogition(self):
         import sys
         from io import StringIO
-        config = {'engine': {'name': 'text'}}
+        config = {'engine': {'text': {}}}
         controller = Controller(config)
         saved_stdout = sys.stdout
         try:
