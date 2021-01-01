@@ -1,9 +1,8 @@
+# Since Python >= 3.7
+import importlib.resources as pkg_resources
 import logging
 import os
 import yaml
-
-# Since Python >= 3.7
-import importlib.resources as pkg_resources
 
 try:
     from yaml import CLoader as Loader
