@@ -88,7 +88,9 @@ class Controller:
         if isinstance(config_dir, str):
             try:
                 with open(config_dir + "/caster.yml", "r") as ymlfile:
-                    config_result.update(yaml.load(ymlfile, Loader=Loader))
+                    config_from_file = yaml.load(ymlfile, Loader=Loader)
+                    if config_from_file is not None:
+                        config_result.update(config_from_file)
             except yaml.YAMLError as error:
                 print("Error in configuration file: {}".format(error))
             except FileNotFoundError as error:
