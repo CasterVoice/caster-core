@@ -58,6 +58,9 @@ class Plugin():
                      set_state,
                      doc="Plugin state.")
 
+    config = property(lambda self: self._manager.get_config(self._id),
+                      doc="Plugin config.")
+
     def persist_state(self):
         self._state.persist()
 

@@ -15,8 +15,4 @@ Note that stored data is presently not encrypted.
 Configuration
 -------------
 
-.. note::
-
-    Work in progress
-
 Plugins can themselves define how they may be configured by the user.
