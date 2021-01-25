@@ -1,3 +1,4 @@
+import tempfile
 import unittest
 
 from castervoice.core.plugin import Plugin
@@ -15,7 +16,31 @@ class MockPlugin(Plugin):
         return None
 
 
+class MockPluginManager():
+    d = tempfile.TemporaryDirectory()
+    state_directory = d.name
+
+
 class TestPlugin(unittest.TestCase):
 
     def test_initialization(self):
         MockPlugin(None)
+
+    def test_state(self):
+        manager = MockPluginManager()
+        plugin = MockPlugin(manager)
+
+        state = {'test': 3}
+        plugin.state = state
+        self.assertEqual(plugin.state, state)
+
+        del plugin
+        plugin = MockPlugin(manager)
+        self.assertEqual(plugin.state, None)
+
+        plugin.state = state
+        plugin.persist_state()
+
+        del plugin
+        plugin = MockPlugin(manager)
+        self.assertEqual(plugin.state, state)
