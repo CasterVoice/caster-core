@@ -34,6 +34,7 @@ class PluginManager():
         self._controller = controller
 
         self._plugins = {}
+        self._plugin_configs = {}
 
         self._state_directory = state_directory
         if self._state_directory is not None:
@@ -77,12 +78,13 @@ class PluginManager():
                                    package_config)
                 continue
 
-        for plugin_id, plugin_config in local_config.items():
-            self.init_plugin(plugin_id, plugin_config)
+        plugin_configs = local_config.pop('config', {})
+        for plugin_id, plugin_config in plugin_configs.items():
+            self._plugin_configs[plugin_id] = plugin_config
 
         self._initialized = True
 
-    def init_plugin(self, plugin_id, plugin_config=None):
+    def init_plugin(self, plugin_id):
         """Initialize plugin.
 
         :param plugin_id: Plugin Id
@@ -91,9 +93,6 @@ class PluginManager():
 
         if plugin_id in self._plugins:
             return
-
-        if plugin_config is not None:
-            self.log.warning('Plugin configurations are not implemented yet!')
 
         try:
             plugin_module = importlib.import_module(plugin_id)
@@ -150,3 +149,12 @@ class PluginManager():
 
         """
         return self._plugins[plugin_id].get_context(desired_context)
+
+    def get_config(self, plugin_id):
+        """Get config of plugin with `plugin_id`.
+
+        :param plugin_id: Plugin Id
+        :returns: Plugin config
+
+        """
+        return self._plugin_configs[plugin_id]

@@ -12,8 +12,11 @@ plugins:
   packages:
     - pip: "git+https://github.com/CasterVoice/caster-plugins.git"
 
-  # Plugins can be configured individually
-  #<plugin_id>:
+  # `config` maps configurations to plugins.
+  # Each plugin itself specifies what configuration options are available.
+  config: {}
+    #<plugin_id>: Plugin configuration.
+    #             See plugin's documentation for available configuration.
 
 # Engine configuration
 engine:
