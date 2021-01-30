@@ -37,17 +37,21 @@ def get_parser():
     parser = argparse.ArgumentParser(
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('--verbose', '-v', action='count',
-                        default=0, help='Verbose logging')
-
     parser.add_argument('--config-dir', '-c', default=DEFAULT_CONFIG_DIR,
-                        help='Configuration directory')
-
-    parser.add_argument('--plugin-state-dir',
-                        help='Plugin state directory')
+                        help='Configuration directory.')
 
     parser.add_argument('--develop', '-d', action='store_true',
-                        help='Development mode')
+                        help='Development mode. In development mode plugins '
+                             'are reloaded if any of the plugin\'s files are '
+                             'altered.')
+
+    parser.add_argument('--plugin-state-dir',
+                        help='Plugin state directory. By default this is a '
+                             'subdirectory within `config_dir`.')
+
+    parser.add_argument('--verbose', '-v', action='count',
+                        default=0, help='Verbose logging (max level: %s).'
+                        % len(VERBOSITY_LOG_LEVEL))
 
     return parser
 
