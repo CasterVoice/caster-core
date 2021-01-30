@@ -14,6 +14,7 @@ Welcome
 
    self
    get_started
+   cli_reference
    configuration
    plugin
    about
