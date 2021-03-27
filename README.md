@@ -1,5 +1,7 @@
 # Caster (3) - Prototype
 
+Docs: https://castervoice.readthedocs.io
+
 ## Build
 
 ### Documentation
