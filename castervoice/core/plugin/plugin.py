@@ -155,11 +155,7 @@ class Plugin():
         if self._context is not None:
             self.log.info("Applying context '%s'", self._context)
             for grammar in self._grammars:
-                # pylint: disable=W0511
-                # TODO: We should not access private `_context` here..
-                # -> PR towards Dragonfly to dynamically
-                # switch a grammars context.
-                grammar._context = self._context  # pylint: disable=W0212
+                grammar.set_context(self._context)
 
             self._apply_context(context)
 
