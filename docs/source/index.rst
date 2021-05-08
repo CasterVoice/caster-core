@@ -1,6 +1,6 @@
 
-Welcome
-=======
+Welcome to Caster
+=================
 
 .. warning::
 
@@ -8,9 +8,13 @@ Welcome
 
     Any provided interfaces or APIs may be subject to sudden change.
 
+
+Contents
+--------
+
 .. toctree::
    :glob:
-   :hidden:
+   :maxdepth: 1
 
    self
    get_started
