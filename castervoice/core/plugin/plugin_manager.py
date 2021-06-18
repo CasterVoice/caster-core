@@ -47,7 +47,7 @@ class PluginManager():
 
         self._init_plugins(config)
 
-    plugins = property(lambda self: self._plugins.values(),
+    plugins = property(lambda self: self._plugins,
                        doc="Retrieve list of initialized plugins.")
 
     log = property(lambda self: logging.getLogger("castervoice.PluginManager"),
@@ -148,7 +148,10 @@ class PluginManager():
         :returns: Context
 
         """
-        return self._plugins[plugin_id].get_context(desired_context)
+        if plugin_id in self._plugins:
+            return self._plugins.\
+                        get(plugin_id, None).get_context(desired_context)
+        return None
 
     def get_config(self, plugin_id):
         """Get config of plugin with `plugin_id`.
@@ -157,4 +160,4 @@ class PluginManager():
         :returns: Plugin config
 
         """
-        return self._plugin_configs[plugin_id]
+        return self._plugin_configs.get(plugin_id, None)

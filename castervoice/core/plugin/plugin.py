@@ -160,7 +160,7 @@ class Plugin():
             for grammar in self._grammars:
                 grammar.set_context(self._context)
 
-            self._apply_context(context)
+            self._apply_context(self._context)
 
     def _apply_context(self, context):
         """Child classes can override this method.
