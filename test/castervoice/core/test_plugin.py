@@ -17,6 +17,7 @@ class MockPlugin(Plugin):
 
 
 class MockPluginManager():
+    # pylint: disable=consider-using-with
     d = tempfile.TemporaryDirectory()
     state_directory = d.name
 
