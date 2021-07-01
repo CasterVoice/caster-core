@@ -140,17 +140,17 @@ class PluginManager():
                       context, plugin_id)
         self._plugins[plugin_id].apply_context(context)
 
-    def get_context(self, plugin_id, desired_context):
+    def get_context(self, plugin_id, desired_state):
         """Get context of plugin with `plugin_id`.
 
         :param plugin_id: Plugin Id
-        :param desired_context: Desired plugin context configuration
+        :param desired_state: Desired context state configuration
         :returns: Context
 
         """
         if plugin_id in self._plugins:
             return self._plugins.\
-                        get(plugin_id, None).get_context(desired_context)
+                        get(plugin_id, None).get_context(desired_state)
         return None
 
     def get_config(self, plugin_id):

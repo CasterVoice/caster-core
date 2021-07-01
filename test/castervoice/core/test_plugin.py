@@ -5,12 +5,12 @@ from castervoice.core.plugin import Plugin
 
 
 class MockPlugin(Plugin):
-    def get_context(self, desired_context=None):
+    def get_context(self, desired_state=None):
         """
 
         Well this.
 
-        :param desired_context:  (Default value = None)
+        :param desired_state:  (Default value = None)
 
         """
         return None

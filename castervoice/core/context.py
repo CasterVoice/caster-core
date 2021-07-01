@@ -27,10 +27,10 @@ class Context(DragonflyContext):
                                              title=title))
 
         # Apply plugin specific contexts
-        for plugin_id, desired_context in config.items():
+        for plugin_id, desired_state in config.items():
             try:
                 plugin_context = manager.get_plugin_context(plugin_id,
-                                                            desired_context)
+                                                            desired_state)
                 self._contexts.append(plugin_context)
 
             except Exception as error:  # pylint: disable=W0703

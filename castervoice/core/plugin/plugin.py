@@ -131,19 +131,19 @@ class Plugin():
         """
         return []
 
-    def get_context(self, desired_context=None):
+    def get_context(self, desired_state=None):
         """Get plugin context.
 
-        The plugin's default context is returned when `desired_context`
+        The plugin's default context is returned when `desired_state`
         is `None`.
         `None` can be returned to indicate that no default context exists
         for this plugin.
 
-        If `desired_context` is set returns a context object which matches
-        the desired context. It is up to the plugin to document which
+        If `desired_state` is set returns a context object which matches
+        the desired state. It is up to the plugin to document which
         context configurations are available.
 
-        :param desired_context: Desired plugin context configuration
+        :param desired_state: Desired context state configuration
         :returns: Context
 
         """

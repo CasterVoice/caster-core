@@ -76,10 +76,10 @@ class ContextManager():
                 .apply_context(plugin_id,
                                LogicOrContext(*plugin_context))
 
-    def get_plugin_context(self, plugin_id, desired_context):
+    def get_plugin_context(self, plugin_id, desired_state):
         """TODO: Docstring for get_plugin_context.
         :returns: TODO
 
         """
         return self._controller.plugin_manager \
-            .get_context(plugin_id, desired_context)
+            .get_context(plugin_id, desired_state)
