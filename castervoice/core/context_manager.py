@@ -70,11 +70,11 @@ class ContextManager():
                     .append(self._contexts[context_name])
 
         # Plugins may be present in various contexts
-        for plugin_id in plugin_contexts:
+        for plugin_id, plugin_context in plugin_contexts.items():
             plugin_manager = self._controller.plugin_manager
             plugin_manager \
                 .apply_context(plugin_id,
-                               LogicOrContext(*plugin_contexts[plugin_id]))
+                               LogicOrContext(*plugin_context))
 
     def get_plugin_context(self, plugin_id, desired_context):
         """TODO: Docstring for get_plugin_context.
