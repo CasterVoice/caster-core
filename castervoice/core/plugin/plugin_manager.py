@@ -98,6 +98,7 @@ class PluginManager():
             plugin_module = importlib.import_module(plugin_id)
         except ModuleNotFoundError:
             self.log.exception("Failed loading plugin '%s'", plugin_id)
+            return
 
         for name, value in getmembers(plugin_module, isclass):
             if issubclass(value, Plugin) and not value == Plugin \
@@ -138,6 +139,12 @@ class PluginManager():
         """
         self.log.info("Applying context '%s' to plugin '%s'",
                       context, plugin_id)
+
+        if plugin_id not in self._plugins:
+            self.log.exception('Could not apply context to %s as it'
+                               ' is not loaded.', plugin_id)
+            return
+
         self._plugins[plugin_id].apply_context(context)
 
     def get_context(self, plugin_id, desired_state):
