@@ -112,6 +112,8 @@ class Plugin():
             self.log.info("Enabling grammar: %s(%s)",
                           self._name, grammar.name)
             grammar.enable()
+            for rule in grammar.rules:
+                rule.enable()
 
     def disable(self):
         """Disable plugin."""
