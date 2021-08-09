@@ -36,7 +36,7 @@ class DependencyManager():
 
         install_command = [sys.executable, '-m', 'pip', 'install']
 
-        if self._controller.dev_mode:
+        if self._controller.dev_mode and not pip_pkg.startswith('git+'):
             install_command.append('-e')
 
         install_command.append(pip_pkg)
