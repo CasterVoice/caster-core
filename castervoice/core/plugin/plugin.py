@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 import yaml
@@ -60,6 +61,9 @@ class Plugin():
 
     config = property(lambda self: self._manager.get_config(self._id),
                       doc="Plugin config.")
+
+    grammars = property(lambda self: copy.deepcopy(self._grammars),
+                        doc="Plugin grammars.")
 
     def persist_state(self):
         self._state.persist()
