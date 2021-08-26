@@ -21,9 +21,14 @@ def new_queue():
 
 
 def on_recognition(words, rule, node):
+    plugin_name = None
     for plugin_name, plugin in Controller.get().plugin_manager.plugins.items():
         if rule.grammar in plugin.grammars:
             break
+
+    # It would be odd recognizing a rule which is not present in
+    # any plugin's grammar
+    assert plugin_name
 
     recognition_event = RecognitionEvent(plugin_name, words, rule, node)
     for queue in consumer_queues:
