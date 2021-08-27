@@ -102,7 +102,7 @@ def main():
     if args.verbose > 0:
         gevent.spawn(watcher.log)
 
-    monkey.patch_all()
+    monkey.patch_all(subprocess=False)
     http_server = WSGIServer(('', 23423), web_app)
     http_server.serve_forever()
 
