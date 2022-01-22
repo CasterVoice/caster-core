@@ -75,11 +75,9 @@ class PluginContext(Context):
         except Exception as error:  # pylint: disable=W0703
             self.manager.log.exception(
                     "Error while applying plugin specific"
-                    " context in context '%s'."
+                    f" context in context '{self._name}'."
                     " Unable to get context for plugin"
-                    " %s: %s" % (self._name,
-                                 self._plugin_id,
-                                 error))
+                    f" {self._plugin_id}: {error}")
 
     def matches(self, executable, title, handle):
         if not self._loaded:
