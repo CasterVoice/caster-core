@@ -131,6 +131,9 @@ class Controller:
         :returns: Engine object
         """
 
+        if 'engine' not in self._config:
+            raise ValueError("Missing `engine` entry in configuration file!")
+
         for engine_type in ['kaldi', 'natlink', 'sapi5', 'text']:
             engine_config = self._config["engine"].get(engine_type)
             if engine_config is not None:
