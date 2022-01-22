@@ -25,7 +25,7 @@ class Plugin():
 
         self._id = self.__class__.__module__
         class_name = self.__class__.__name__
-        self._name = "{}.{}".format(self._id, class_name)
+        self._name = f"{self._id}.{class_name}"
 
         self._manager = manager
         self._loaded = False
@@ -37,7 +37,7 @@ class Plugin():
         if self._manager and self._manager.state_directory:
             self._state = PluginState(os.path
                                       .join(self._manager.state_directory,
-                                            "%s.state" % (self._id)))
+                                            "{self._id}.state"))
 
         self._init_context()
 
@@ -47,8 +47,8 @@ class Plugin():
     name = property(lambda self: self._name,
                     doc="Plugin name.")
 
-    log = property(lambda self: logging.getLogger("castervoice.Plugin({})"
-                                                  .format(self._name)),
+    log = property(lambda self:
+                   logging.getLogger("castervoice.Plugin({self._name})"),
                    doc="Get class logger.")
 
     def set_state(self, data):
@@ -150,8 +150,8 @@ class Plugin():
 
         """
 
-        raise NotImplementedError("Plugin '%s' does not provide any"
-                                  " contexts" % (self._name))
+        raise NotImplementedError(f"Plugin '{self._name}' does not provide any"
+                                  " contexts")
 
     def apply_context(self, context=None):
         if context is not None:
@@ -182,10 +182,11 @@ class PluginFile:
         self._type = self.__class__.__name__
 
         try:
-            with open(file_path, "r") as ymlfile:
+            with open(file_path, "r", encoding="utf-8") as ymlfile:
                 self._data = yaml.load(ymlfile, Loader=Loader)
         except yaml.YAMLError as error:
-            print("Error in {} file: {}".format(self._type, error))
+            print("Error in {self._type} file:")
+            print(error)
         except FileNotFoundError:
             pass
 
@@ -205,5 +206,5 @@ class PluginState(PluginFile):
         super().__init__(file_path)
 
     def persist(self):
-        with open(self._file_path, 'w') as ymlfile:
+        with open(self._file_path, 'w', encoding="utf-8") as ymlfile:
             ymlfile.write(yaml.dump(self._data, Dumper=Dumper))
