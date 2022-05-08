@@ -2,7 +2,7 @@ import logging
 
 from dragonfly.grammar.context import LogicOrContext, LogicAndContext
 
-from castervoice.core.context import Context
+from castervoice.core.context import ConfigContext
 
 
 class ContextManager():
@@ -45,7 +45,7 @@ class ContextManager():
             context_plugins = context_config.pop("plugins", [])
             extends = context_config.pop("extends", None)
 
-            context = Context(self, context_config)
+            context = ConfigContext(self, context_config)
 
             if isinstance(extends, str):
                 extended_context = self._contexts.get(extends)

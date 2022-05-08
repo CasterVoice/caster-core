@@ -41,9 +41,9 @@ class PluginManager():
             if not os.path.exists(self._state_directory):
                 os.mkdir(self._state_directory)
             elif not os.path.isdir(self._state_directory):
-                raise NotADirectoryError("State directory '%s' must be a"
-                                         " directory!"
-                                         % (self._state_directory))
+                raise NotADirectoryError("State directory"
+                                         f" '{self._state_directory}'"
+                                         " must be a directory!")
 
         self._init_plugins(config)
 

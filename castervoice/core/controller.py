@@ -86,12 +86,13 @@ class Controller:
 
         if isinstance(config_dir, str):
             try:
-                with open(config_dir + "/caster.yml", "r") as ymlfile:
+                with open(config_dir + "/caster.yml", "r",
+                          encoding="utf-8") as ymlfile:
                     config_from_file = yaml.load(ymlfile, Loader=Loader)
                     if config_from_file is not None:
                         config_result.update(config_from_file)
             except yaml.YAMLError as error:
-                print("Error in configuration file: {}".format(error))
+                print(f"Error in configuration file: {error}")
             except FileNotFoundError as error:
                 self.log.info("Configuration file was not found in specified "
                               "path '%s': %s ",
@@ -101,7 +102,7 @@ class Controller:
                 return self.load_config(config, config_dir)
 
         if "plugins" not in config_result:
-            config_result["plugins"] = dict()
+            config_result["plugins"] = {}
         if "contexts" not in config_result:
             config_result["contexts"] = []
 
@@ -112,12 +113,13 @@ class Controller:
 
             if not os.path.isdir(os.path.dirname(config_dir)):
                 raise FileNotFoundError("Configuration directory base path "
-                                        "'%s' does not exist!" %
-                                        os.path.dirname(config_dir))
+                                        f"'{os.path.dirname(config_dir)}'"
+                                        "does not exist!")
 
             os.mkdir(config_dir)
 
-        with open(config_dir + "/caster.yml", 'w') as config_file:
+        with open(config_dir + "/caster.yml", 'w', encoding="utf-8") \
+                as config_file:
             config_file.write(pkg_resources.read_text(casterconfig,
                                                       'caster.yml'))
 
@@ -129,14 +131,17 @@ class Controller:
         :returns: Engine object
         """
 
+        if 'engine' not in self._config:
+            raise ValueError("Missing `engine` entry in configuration file!")
+
         for engine_type in ['kaldi', 'natlink', 'sapi5', 'text']:
             engine_config = self._config["engine"].get(engine_type)
             if engine_config is not None:
                 break
 
         if engine_config is None:
-            raise ValueError("Missing `engine` configuration! Received '%s'"
-                             % self._config["engine"])
+            raise ValueError("Missing `engine` configuration! Received "
+                             f"'{self._config['engine']}'")
 
         dragonfly_engine = engine_config.get('options', {})
         dragonfly_engine.update(dict([('name', engine_type)]))

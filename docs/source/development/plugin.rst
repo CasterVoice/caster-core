@@ -2,5 +2,5 @@ Plugin
 ======
 
 .. automodule:: castervoice.core.plugin
-   :members: Plugin
+   :members: Plugin,PluginManager
    :noindex:

@@ -13,19 +13,19 @@ Plugins
 Plugins can be used by adding plugin packages to the :doc:`configuration file</configuration>` which are installed
 automatically when *Caster* starts.
 
-For example, the following will install `Timoses Caster Plugins`_ package:
+For example, the following will install `CasterVoice Caster Plugins`_ package:
 
 
-.. _Timoses Caster Plugins: https://github.com/Timoses/caster-timoses
+.. _CasterVoice Caster Plugins: https://github.com/CasterVoice/caster-plugins
 
 .. code-block:: yaml
 
     plugins:
       packages:
-        - pip: "git+https://github.com/Timoses/caster-plugins.git"
+        - pip: "git+https://github.com/CasterVoice/caster-plugins.git"
 
 
-Once the package is included its plugins can be referenced in plugin list of a context section within the :doc:`configuration file</configuration>` like so:
+Once the package is included its plugins can be referenced in the plugins list of a context section within the :doc:`configuration file</configuration>` like so:
 
 .. code-block:: yaml
 
@@ -33,4 +33,4 @@ Once the package is included its plugins can be referenced in plugin list of a c
     contexts:
       - name: global
         plugins:
-          - castercontrol
+          - casterplugin.castercontrol

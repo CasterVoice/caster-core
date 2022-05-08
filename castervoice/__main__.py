@@ -16,7 +16,7 @@ DEFAULT_CONFIG_DIR = "config"
 
 
 def default_plugin_state_dir(config_dir):
-    return "{}/plugins.state".format(config_dir)
+    return f"{config_dir}/plugins.state"
 
 
 def _on_begin():
@@ -24,9 +24,9 @@ def _on_begin():
 
 
 def _on_recognition(words, rule, node):
-    print(u"Recognized: %s" % u" ".join(words))
-    print(u"    Executing rule: %s" % (rule))
-    print(u"    Action: %s" % (node.value()))
+    print("Recognized: " + " ".join(words))
+    print("    Executing rule: " + str(rule))
+    print("    Action: " + str(node.value()))
 
 
 def _on_failure():
@@ -50,8 +50,8 @@ def get_parser():
                              'subdirectory within `config_dir`.')
 
     parser.add_argument('--verbose', '-v', action='count',
-                        default=0, help='Verbose logging (max level: %s).'
-                        % len(VERBOSITY_LOG_LEVEL))
+                        default=0, help=f'Verbose logging (max level:\
+                                          {len(VERBOSITY_LOG_LEVEL)}).')
 
     return parser
 

@@ -15,4 +15,4 @@ Note that stored data is presently not encrypted.
 Configuration
 -------------
 
-Plugins can themselves define how they may be configured by the user.
+Plugins can themselves define how they may be :doc:`configured </configuration>` by the user.
