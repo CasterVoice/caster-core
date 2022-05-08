@@ -3,7 +3,14 @@ import logging
 import os
 import sys
 
+import gevent
+import gevent.queue
+from gevent.pywsgi import WSGIServer
+from gevent import monkey
+
+from castervoice import watcher
 from castervoice.core import Controller
+from castervoice.web import app as web_app
 
 
 VERBOSITY_LOG_LEVEL = {
@@ -17,20 +24,6 @@ DEFAULT_CONFIG_DIR = "config"
 
 def default_plugin_state_dir(config_dir):
     return "{}/plugins.state".format(config_dir)
-
-
-def _on_begin():
-    print("Speech start detected.")
-
-
-def _on_recognition(words, rule, node):
-    print(u"Recognized: %s" % u" ".join(words))
-    print(u"    Executing rule: %s" % (rule))
-    print(u"    Action: %s" % (node.value()))
-
-
-def _on_failure():
-    print("Sorry, what was that?")
 
 
 def get_parser():
@@ -87,6 +80,7 @@ def main():
     :returns: TODO
 
     """
+
     args = get_args()
 
     logging.basicConfig(level=VERBOSITY_LOG_LEVEL[args.verbose])
@@ -102,10 +96,15 @@ def main():
             logging.getLogger().exception(error)
         sys.exit(1)
 
+    gevent.spawn(controller.listen, watcher.on_begin,
+                 watcher.on_recognition, watcher.on_failure)
+
     if args.verbose > 0:
-        controller.listen(_on_begin, _on_recognition, _on_failure)
-    else:
-        controller.listen()
+        gevent.spawn(watcher.log)
+
+    monkey.patch_all(subprocess=False)
+    http_server = WSGIServer(('', 23423), web_app)
+    http_server.serve_forever()
 
 
 if __name__ == "__main__":

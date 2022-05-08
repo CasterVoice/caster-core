@@ -86,7 +86,8 @@ class Controller:
 
         if isinstance(config_dir, str):
             try:
-                with open(config_dir + "/caster.yml", "r") as ymlfile:
+                config_file = config_dir + "/caster.yml"
+                with open(config_file, "r", encoding='UTF-8') as ymlfile:
                     config_from_file = yaml.load(ymlfile, Loader=Loader)
                     if config_from_file is not None:
                         config_result.update(config_from_file)
@@ -101,7 +102,7 @@ class Controller:
                 return self.load_config(config, config_dir)
 
         if "plugins" not in config_result:
-            config_result["plugins"] = dict()
+            config_result["plugins"] = {}
         if "contexts" not in config_result:
             config_result["contexts"] = []
 
@@ -117,7 +118,8 @@ class Controller:
 
             os.mkdir(config_dir)
 
-        with open(config_dir + "/caster.yml", 'w') as config_file:
+        config_file = config_dir + "/caster.yml"
+        with open(config_file, 'w', encoding='UTF-8') as config_file:
             config_file.write(pkg_resources.read_text(casterconfig,
                                                       'caster.yml'))
 

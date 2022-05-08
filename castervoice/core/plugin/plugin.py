@@ -61,6 +61,9 @@ class Plugin():
     config = property(lambda self: self._manager.get_config(self._id),
                       doc="Plugin config.")
 
+    grammars = property(lambda self: self._grammars,
+                        doc="Plugin grammars.")
+
     def persist_state(self):
         self._state.persist()
 
@@ -182,7 +185,7 @@ class PluginFile:
         self._type = self.__class__.__name__
 
         try:
-            with open(file_path, "r") as ymlfile:
+            with open(file_path, "r", encoding='UTF-8') as ymlfile:
                 self._data = yaml.load(ymlfile, Loader=Loader)
         except yaml.YAMLError as error:
             print("Error in {} file: {}".format(self._type, error))
@@ -205,5 +208,5 @@ class PluginState(PluginFile):
         super().__init__(file_path)
 
     def persist(self):
-        with open(self._file_path, 'w') as ymlfile:
+        with open(self._file_path, 'w', encoding='UTF-8') as ymlfile:
             ymlfile.write(yaml.dump(self._data, Dumper=Dumper))
