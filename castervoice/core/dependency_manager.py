@@ -71,9 +71,9 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
         # 'casterplugin.dictation') and value contains the entries
         # `module` (module object) and `dependencies`
         # (list of modules which the module depends on)
-        self._modules = dict()
+        self._modules = {}
 
-        self.watched_plugin_modules = dict()
+        self.watched_plugin_modules = {}
 
         get_current_engine().create_timer(self.reload, 10)
 
@@ -114,11 +114,11 @@ class ModuleReloader(importlib.abc.MetaPathFinder):
                     except AttributeError:
                         m = sys.modules[m.__name__ + '.' + component]
 
-            module = self._modules.setdefault(name, dict())
+            module = self._modules.setdefault(name, {})
             module["module"] = m
 
             if parent is not None:
-                parent_module = self._modules.setdefault(parent, dict())
+                parent_module = self._modules.setdefault(parent, {})
                 # If this is a nested import for a reloadable (source-based)
                 # module, we append ourself to our parent's dependency list.
                 if hasattr(m, '__file__'):
